@@ -6,7 +6,6 @@ from django.urls import reverse
 from .models import *
 
 
-
 def index(request):
     active_listings = Listing.objects.all()
     return render(request, "auctions/index.html", {
@@ -14,14 +13,30 @@ def index(request):
     })
 
 
+def create(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        description = request.POST["description"]
+        category = request.POST["category"]
+        starting_bid = request.POST["starting_bid"]
+        image_url = request.POST["image_url"]
+        listing = Listing.objects.create(title=title,
+                                        description=description,
+                                        category=category,
+                                        starting_bid=starting_bid,
+                                        image_url=image_url)
+        listing.save()
+
+    return render(request, "auction/create.html", {
+        "listing" : Listing,
+    })
+
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
-
         # Check if authentication successful
         if user is not None:
             login(request, user)
@@ -43,7 +58,6 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -51,7 +65,6 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
