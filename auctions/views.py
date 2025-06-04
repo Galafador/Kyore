@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 from .models import *
@@ -12,24 +13,6 @@ def index(request):
         "active_listings" : active_listings
     })
 
-
-def create(request):
-    if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        category = request.POST["category"]
-        starting_bid = request.POST["starting_bid"]
-        image_url = request.POST["image_url"]
-        listing = Listing.objects.create(title=title,
-                                        description=description,
-                                        category=category,
-                                        starting_bid=starting_bid,
-                                        image_url=image_url)
-        listing.save()
-
-    return render(request, "auction/create.html", {
-        "listing" : Listing,
-    })
 
 def login_view(request):
     if request.method == "POST":
@@ -77,3 +60,47 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+
+@login_required
+def create(request): 
+    if request.method == "POST":
+        title = request.POST["title"]
+        description = request.POST["description"]
+        category = request.POST.get("category", "")
+        starting_bid = float(request.POST["starting_bid"])
+        image_url = request.POST.get("image_url", "")
+
+        Listing.objects.create(title=title,
+                            description=description,
+                            category=category,
+                            starting_bid=starting_bid,
+                            image_url=image_url)
+        
+        return HttpResponseRedirect(reverse("Index"))
+
+    categories = Category.objects.all() + []
+    return render(request, "auction/create.html", {
+        "listing" : Listing,
+        "categories" : categories,
+    })
+
+def categories_view(request):
+    root_categories = Category.objects.filter(parent__isnull=True)
+
+    return render(request, "auctions/categories.html",{
+        "root_categories" : root_categories
+    })
+
+#a view to handle ajax request to fetch child categories.
+def get_child_categories(request):
+    parent_id = request.GET.get("parent_id")
+    if not parent_id:
+        return JsonResponse({"error": "No parent_id provided"}, status=400)
+    try:
+        parent_category = Category.objects.get(id=parent_id)
+        child_categories = parent_category.get_children()
+        data = [{"id": cat.id, "name": cat.name, "is_leaf":cat.is_leaf_node()} for cat in child_categories]
+        return JsonResponse({"child_categories" : data})
+    except Category.DoesNotExist:
+        return JsonResponse({"error": "Parent category not found."}, status=404)

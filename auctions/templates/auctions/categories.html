@@ -1,0 +1,56 @@
+{% extends "auctions/layout.html" %}
+{% load mptt_tags %}
+
+{% block body %}
+<div class="category-container">
+    <h2>Select Category</h2>
+    <ul id="category-list">
+        {% for category in root_categories %}
+        <li>
+            <button class="category-btn" data-id="{{category.id}}">{{ category.name }}</button>
+        </li>
+        {% endfor %}
+    </ul>
+    <div id=""selected-category style="margin-top: 20px;">
+        <strong>Selected Category:</strong> <span id="selected-category-name">None</span>
+    </div>
+</div>
+<button id="submit-category" class="submit-btn">Submit</button>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const categoryList = document.getElementById("category-list");
+    const selectedCategoryName = document.getElementById("selected-category-name");
+
+    categoryList.addEventListener("click", (event) => {
+        if (event.target.classList.contains("category-btn")) {
+            const parentId = event.target.getAttribute("data-id");
+            const categoryName = event.target.textContent;
+
+            // Update the selected category name
+            selectedCategoryName.textContent = categoryName;
+
+            // Fetch child categories via AJAX
+            fetch(`/get_child_categories?parent_id=${parentId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.child_categories && data.child_categories.length > 0) {
+                        // Clear the current list and display child categories
+                        categoryList.innerHTML = "";
+                        data.child_categories.forEach((child) => {
+                            const li = document.createElement("li");
+                            li.innerHTML = `<button class="category-btn" data-id="${child.id}">${child.name}</button>`;
+                            categoryList.appendChild(li);
+                        });
+                    } else {
+                        // If no child categories, show a message
+                        alert("You have reached the leaf category.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching child categories:", error);
+                });
+        }
+    });
+});
+</script>
+{% endblock %}
