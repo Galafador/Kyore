@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 
-
 class User(AbstractUser):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     watchlist = models.ManyToManyField("Listing", related_name="watchlisted_by", blank=True)
