@@ -51,8 +51,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True # For development use
-
 ROOT_URLCONF = 'commerce.urls'
 
 TEMPLATES = [
