@@ -106,8 +106,13 @@ def get_child_categories(request):
         return JsonResponse({"error": "Parent category not found."}, status=404)
 
 
-def listing(request):
-    listing = Listing.objects.filter(id=request.id)
+def listing(request, id):
+    listing = Listing.objects.get(id=id)
     return render(request, "auctions/listing.html", {
-
+        "title" : listing.title,
+        "description" : listing.description,
+        "image_url" : listing.image_url,
+        "starting_bid": listing.starting_bid,
+        "highest_bid": listing.highest_bid,
+        "highest_bidder": listing.highest_bidder
     })

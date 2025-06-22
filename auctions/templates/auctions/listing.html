@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <h4>{{ title }}</h4>
+    
+
+    <div style="display: flex; border: 1px black solid; border-radius: 8px; margin: 20px; padding: 8px; gap: 8px;">
+        <img src="{{ image_url }}" alt="cover image for {{ title }}">
+        <p>{{ description }}</p>    
+    </div>
+    
+{% endblock %}
