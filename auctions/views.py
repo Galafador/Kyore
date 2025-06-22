@@ -104,3 +104,10 @@ def get_child_categories(request):
         return JsonResponse({"child_categories" : data})
     except Category.DoesNotExist:
         return JsonResponse({"error": "Parent category not found."}, status=404)
+
+
+def listing(request):
+    listing = Listing.objects.filter(id=request.id)
+    return render(request, "auctions/listing.html", {
+
+    })
