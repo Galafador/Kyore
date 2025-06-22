@@ -35,12 +35,22 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="listings", null=True)
     is_active = models.BooleanField(default=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
+    has_bids = models.BooleanField(default=False)
     highest_bid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
     highest_bidder = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="highest_bidder", null=True, blank=True)
+    number_of_bids = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="wins", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.URLField(null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if self.number_of_bids > 0:
+            self.has_bids = True
+        else:
+            self.has_bids = False
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.title}"
     
