@@ -1,3 +1,8 @@
+body html {
+    padding: 0;
+    margin: 0;
+}
+
 .category-container {
     max-width: 600px;
     margin: 0 auto;

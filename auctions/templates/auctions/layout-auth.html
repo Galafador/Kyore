@@ -12,8 +12,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     </head>
     <body>
-
-        {% block body %}
-        {% endblock %}
+        <div class="d-flex" style="min-height: 100vh;">
+            <div class="w-50 bg-dark text-white">a</div>
+            <div class="w-50">        
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
     </body>
 </html>
