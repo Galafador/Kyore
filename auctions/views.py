@@ -40,6 +40,10 @@ def logout_view(request):
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
+        if not username:
+            return render(request, "auctions/register.html", {
+                "message": "Invalid username."
+            })
         email = request.POST["email"]
         # Ensure password matches confirmation
         password = request.POST["password"]

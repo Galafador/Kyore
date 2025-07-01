@@ -1,4 +1,187 @@
-body html {
+/*------------------Defining Variables------------------*/
+:root {
+    
+    /* Text Colors */
+    --color-text-caption: #212529;
+    --color-text-paragraph: #212529;
+    --color-text-heading: #1A1A1A;
+    --color-text-heading-invert: #F2F2F2;
+
+    /* Backdrop & Surface Colors */
+    --color-brand-primary: #743AE8;
+    --color-backdrop: #FFFFFF;
+    --color-backdrop-invert: #2d2d2d;
+
+    /* Outline & Shadow Colors */
+    --color-outline-brand: #8f5ff0;
+    --color-outline-light: #ced4da;
+    --color-shadow-brand: #743ae848;
+
+    /* Brand Button Colors */
+    --color-button-brand-text: #F2F2F2;
+    --color-button-brand-hover: #652fd1;
+    --color-button-brand-hover-border: #5c28c4;
+    --color-button-brand-focus-shadow: #743ae848;
+    --color-button-brand-active: #5725bb;
+    --color-button-brand-active-border: #4e21aa;
+
+    /* Primary Button Colors */
+    --color-button-primary: #2D2D2D;
+    --color-button-primary-text: #f2f2f2;
+    --color-button-primary-hover: #202020;
+    --color-button-primary-hover-border: #202020;
+    --color-button-primary-focus-shadow: #2d2d2d42;
+    --color-button-primary-active: #1a1a1a;
+    --color-button-primary-active-border: #1a1a1a;
+    
+    /* Secondary Button Colors */
+    --color-button-secondary: #FFFFFF;
+    --color-button-secondary-border: #ced4da;
+    --color-button-secondary-text: var(--color-text-caption);
+    --color-button-secondary-hover: #f7f7f7;
+    --color-button-secondary-hover-border: #ced4da;
+    --color-button-secondary-focus-shadow: #1a1a1a2a;
+    --color-button-secondary-focus-border: #8b8b8b;
+    --color-button-secondary-active: #F2F2F2;
+    --color-button-secondary-active-border: #ced4da;
+
+    /* Typography family */
+    --font-family-display: "Pixelify Sans", sans-serif;
+    --font-family-default: "Plus Jakarta Sans", sans-serif;
+}
+
+/*------------------Set Defaults------------------*/
+html, body {
     padding: 0;
     margin: 0;
+    font-family: var(--font-family-default);
+}
+
+/*------------------Typography Styles------------------*/
+.pixelify-sans-welcome-message {
+    color: var(--color-text-heading-invert);
+    font-family: "Pixelify Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 3.5rem;
+    letter-spacing: -0.2rem;
+    user-select: none;
+}
+
+/*------------------Surface Styles------------------*/
+.bg-light {
+    background-color: var(--color-backdrop) !important;
+}
+.bg-dark {
+    background-color: var(--color-backdrop-invert) !important;
+}
+
+/*------------------Button Styles------------------*/
+/* Brand Button Styles */
+.btn-brand {
+    color: var(--color-button-brand-text);
+    background-color: var(--color-brand-primary);
+    border-color: var(--color-brand-primary);
+    border-radius: 6rem;
+    padding: 0.5rem 1rem;
+}
+.btn-brand:hover {
+    color: var(--color-button-brand-text);
+    background-color: var(--color-button-brand-hover);
+    border-color: var(--color-button-brand-hover-border);
+}
+.btn-brand:focus {
+    color: var(--color-button-brand-text);
+    background-color: var(--color-button-brand-hover);
+    border-color: var(--color-button-brand-hover-border);
+    box-shadow: 0 0 0 0.25rem var(--color-button-brand-focus-shadow);
+}
+.btn-brand:active, 
+.btn-brand.active, 
+.show > .btn-brand.dropdown-toggle {
+    color: var(--color-button-brand-text) !important;
+    background-color: var(--color-button-brand-active) !important;
+    border-color: var(--color-button-brand-active-border) !important;
+    box-shadow: 0 0 0 0.25rem transparent !important;
+}
+
+/* Primary Button Styles */
+.btn-primary {
+    color: var(--color-button-primary-text);
+    background-color: var(--color-button-primary);
+    border-color: var(--color-button-primary);
+    border-radius: 6rem;
+}
+.btn-primary:hover {
+    color: var(--color-button-primary-text);
+    background-color: var(--color-button-primary-hover);
+    border-color: var(--color-button-primary-hover-border);
+}
+.btn-primary:focus {
+    color: var(--color-button-primary-text);
+    background-color: var(--color-button-primary-hover);
+    border-color: var(--color-button-primary-hover-border);
+    box-shadow: 0 0 0 0.25rem var(--color-button-primary-focus-shadow);
+}
+.btn-primary:active, 
+.btn-primary.active, 
+.show > .btn-primary.dropdown-toggle {
+    color: var(--color-button-primary-text) !important;
+    background-color: var(--color-button-primary-active) !important;
+    border-color: var(--color-button-primary-active-border) !important;
+    box-shadow: 0 0 0 0.25rem transparent !important;
+}
+
+/* Secondary Button Styles */
+.btn-secondary {
+    color: var(--color-button-secondary-text);
+    background-color: var(--color-button-secondary);
+    border-color: var(--color-button-secondary-border);
+    border-radius: 6rem;
+}
+.btn-secondary:hover {
+    color: var(--color-button-secondary-text);
+    background-color: var(--color-button-secondary-hover);
+    border-color: var(--color-button-secondary-hover-border);
+}
+.btn-secondary:focus {
+    color: var(--color-button-secondary-text);
+    background-color: var(--color-button-secondary-hover);
+    border-color: var(--color-button-secondary-focus-border);
+    box-shadow: 0 0 0 0.25rem var(--color-button-secondary-focus-shadow);
+}
+.btn-secondary:active, 
+.btn-secondary.active, 
+.show > .btn-secondary.dropdown-toggle {
+    color: var(--color-button-secondary-text) !important;
+    background-color: var(--color-button-secondary-active) !important;
+    border-color: var(--color-button-secondary-active-border) !important;
+    box-shadow: 0 0 0 0.25rem transparent !important;
+}
+
+/*------------------Forms Styles------------------*/
+.form-control-kyore {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-caption);
+    background-color: var(--color-backdrop, #FFFFFF);
+    border: 1px solid var(--color-outline-light);
+    border-radius: 6rem;
+}
+.form-control-kyore:focus {
+    color: var(--color-text-caption);
+    background-color: var(--color-backdrop, #FFFFFF);
+    border-color: var(--color-outline-brand);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--color-shadow-brand);
+}
+
+/*------------------Specific to page: Login/Register------------------*/
+.login-image {
+    background: url('/static/images/BG-AUTH.webp') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
 }
