@@ -1,0 +1,6 @@
+/*------------------Specific to page: Login/Register------------------*/
+.login-image {
+    background: url('/static/images/BG-AUTH.webp') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+}

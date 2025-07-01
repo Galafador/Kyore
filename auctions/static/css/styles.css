@@ -11,11 +11,15 @@
     --color-brand-primary: #743AE8;
     --color-backdrop: #FFFFFF;
     --color-backdrop-invert: #2d2d2d;
+    --color-backdrop-nav: rgba(255, 255, 255, 0.50);
 
     /* Outline & Shadow Colors */
     --color-outline-brand: #8f5ff0;
     --color-outline-light: #ced4da;
     --color-shadow-brand: #743ae848;
+
+    --color-shadow-sharp: rgba(255, 255, 255, 0.363);
+    --color-shadow-blur: rgba(217, 217, 217, 0.336);
 
     /* Brand Button Colors */
     --color-button-brand-text: #F2F2F2;
@@ -177,11 +181,4 @@ html, body {
     border-color: var(--color-outline-brand);
     outline: 0;
     box-shadow: 0 0 0 0.25rem var(--color-shadow-brand);
-}
-
-/*------------------Specific to page: Login/Register------------------*/
-.login-image {
-    background: url('/static/images/BG-AUTH.webp') no-repeat center center;
-    background-size: cover;
-    min-height: 100vh;
 }

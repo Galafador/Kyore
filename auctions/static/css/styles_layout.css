@@ -1,0 +1,32 @@
+/*------------------Specific to page: Layout------------------*/
+.nav.nav-kyore {
+    padding-block: 0.85rem;
+    padding-inline: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 80px;
+    background-color: rgba(0, 0, 0, 0.719);
+    overflow: hidden;
+    border-bottom:  1px solid var(--Color-outline-light, #C7C7C7);
+    background-color: var(--color-backdrop-nav, rgba(255, 255, 255, 0.5));
+    backdrop-filter: blur(4px);
+}
+.nav-backdrop-filter {
+    position: absolute;
+    top: -20px;
+    bottom: -20px;
+    left: -80px;
+    right: -80px;
+    z-index: 0;
+    pointer-events: none;
+    background: url('your-svg-file.svg') center/cover no-repeat;
+    overflow: hidden;
+}
+.nav-logo {
+    border-radius: 300px;
+    box-shadow: 0px 3px 6px 0px var(--color-shadow-sharp), 0px 4px 12px 4px var(--color-shadow-blur);
+}
+.nav-item-group {
+    display: flex;
+    gap: 1rem;
+}

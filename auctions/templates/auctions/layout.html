@@ -6,35 +6,67 @@
         <title>{% block title %}Auctions{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'css/styles_layout.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav">
+        <ul class="nav nav-kyore">
+            <div class="nav-backdrop-filter">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="79" viewBox="0 0 1440 79" fill="none">
+                <g filter="url(#filter0_ng_93_661)">
+                <rect width="1600" height="119" transform="translate(-80 -20)" fill="white" fill-opacity="0.01"/>
+                </g>
+                <defs>
+                <filter id="filter0_ng_93_661" x="-90" y="-30" width="1620" height="139" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                <feTurbulence type="fractalNoise" baseFrequency="1 1" stitchTiles="stitch" numOctaves="3" result="noise" seed="695"/>
+                <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise"/>
+                <feComponentTransfer in="alphaNoise" result="coloredNoise1">
+                <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "/>
+                </feComponentTransfer>
+                <feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped"/>
+                <feFlood flood-color="rgba(255, 255, 255, 0.05)" result="color1Flood"/>
+                <feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1"/>
+                <feMerge result="effect1_noise_93_661">
+                <feMergeNode in="shape"/>
+                <feMergeNode in="color1"/>
+                </feMerge>
+                <feTurbulence type="fractalNoise" baseFrequency="0.0099999997764825821 0.0099999997764825821" numOctaves="3" seed="1686"/>
+                <feDisplacementMap in="effect1_noise_93_661" scale="20" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%"/>
+                <feMerge result="effect2_texture_93_661">
+                <feMergeNode in="displacedImage"/>
+                </feMerge>
+                </filter>
+                </defs>
+                </svg>
+            </div>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                <a href="{% url 'index' %}">
+                    <img class="nav-logo" src="{% static '/images/Logo-navbar.webp' %}" alt="kyore logo">
+                </a>
             </li>
-            {% if user.is_authenticated %}
+            <div class="nav-item-group ml-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                 </li>
-            {% else %}
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log In</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
-            {% endif %}
+                {% endif %}
+            </div>
         </ul>
-        <hr>
-        {% block body %}
-        {% endblock %}
+        <div class="container-fluid mt-5">
+            {% block body %}
+            {% endblock %}
+        </div>
+
     </body>
 </html>
