@@ -4,69 +4,78 @@
 <html lang="en">
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+        <!-- Fonts End -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
         <link href="{% static 'css/styles.css' %}" rel="stylesheet">
         <link href="{% static 'css/styles_layout.css' %}" rel="stylesheet">
+        <link rel="icon" type="image/png" href="{% static 'images/favicon-dark.ico' %}">
     </head>
-    <body>
-        <ul class="nav nav-kyore">
-            <div class="nav-backdrop-filter">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="79" viewBox="0 0 1440 79" fill="none">
-                <g filter="url(#filter0_ng_93_661)">
-                <rect width="1600" height="119" transform="translate(-80 -20)" fill="white" fill-opacity="0.01"/>
-                </g>
-                <defs>
-                <filter id="filter0_ng_93_661" x="-90" y="-30" width="1620" height="139" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                <feTurbulence type="fractalNoise" baseFrequency="1 1" stitchTiles="stitch" numOctaves="3" result="noise" seed="695"/>
-                <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise"/>
-                <feComponentTransfer in="alphaNoise" result="coloredNoise1">
-                <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "/>
-                </feComponentTransfer>
-                <feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped"/>
-                <feFlood flood-color="rgba(255, 255, 255, 0.05)" result="color1Flood"/>
-                <feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1"/>
-                <feMerge result="effect1_noise_93_661">
-                <feMergeNode in="shape"/>
-                <feMergeNode in="color1"/>
-                </feMerge>
-                <feTurbulence type="fractalNoise" baseFrequency="0.0099999997764825821 0.0099999997764825821" numOctaves="3" seed="1686"/>
-                <feDisplacementMap in="effect1_noise_93_661" scale="20" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%"/>
-                <feMerge result="effect2_texture_93_661">
-                <feMergeNode in="displacedImage"/>
-                </feMerge>
-                </filter>
-                </defs>
-                </svg>
-            </div>
-            <li class="nav-item">
-                <a href="{% url 'index' %}">
+    <body style="min-height: 120vh;">
+        <nav class="navbar navbar-expand-lg nav-kyore fixed-top">
+            <div class="container-fluid">
+                <a href="{% url 'index' %}" class="nav-logo">
                     <img class="nav-logo" src="{% static '/images/Logo-navbar.webp' %}" alt="kyore logo">
                 </a>
-            </li>
-            <div class="nav-item-group ml-auto d-flex align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-                </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-                {% endif %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto d-flex align-items-end nav-item-group">
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="{% url 'show_categories' %}">Categories</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="#">Watchlist</a>
+                        </li>
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="#">New Listing</a>
+                        </li>
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore">{{user.username.capitalize}}<span class="icon-user"></span></a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item nav-item-kyore">
+                            <a class="nav-link nav-link-kyore" href="{% url 'login' %}">Log In/Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </ul>
-        <div class="container-fluid mt-5">
+        </nav>
+
+        <div class="container-fluid" style="margin-top: 80px;">
             {% block body %}
             {% endblock %}
         </div>
 
+        <!--SVG Filter for Navbar-->
+        <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute; overflow:hidden">
+            <defs>
+                <filter id="glass-distortion" x="0" y="0" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+                    <feTurbulence type="fractalNoise" baseFrequency="1 1" stitchTiles="stitch" numOctaves="2" seed="92" result="noiseGrain"/>
+                    <feColorMatrix in="noiseGrain" type="saturate" values="0" result="bwNoiseGrain"/>
+                    <feComponentTransfer in="bwNoiseGrain" result="bwNoiseGrainHalfOpacity">
+                        <feFuncA type="linear" slope="0.8"/>
+                    </feComponentTransfer>
+                    <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
+                    <feDisplacementMap in="SourceGraphic" in2="blurred" scale="100" xChannelSelector="R"
+                    yChannelSelector="G" result="displacement"/>
+                    <feBlend mode="hard-light" in1="displacement" in2="bwNoiseGrainHalfOpacity" result="noisyGlassEffect">
+                </filter>
+            </defs>
+        </svg>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     </body>
 </html>
