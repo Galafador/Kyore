@@ -70,4 +70,8 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment: '{self.comment}' by {self.commenter} on '{self.listing.title}'"
 
-
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorited_by")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="favorites")
+    def __str__(self):
+        return f"'{self.user}' favorites '{self.listing}'"
