@@ -1,19 +1,23 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block additional_css %}
+    <link href="{% static 'css/styles_index.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block title %}
 Index
 {% endblock %}
 
 {% block body %}
-    {% if message %}
-        {{ message }}
-    {% endif %}
-        
-    <h2>Active Listings</h2>
+    <div class="container-xl active-listing-container">
+        <h2>Active Listings</h2>
     <ul>
         {% for active_listing in active_listings %}
         <li><a href="{% url 'listing' id=active_listing.id %}">{{ active_listing }}</a></li>
         {% empty %}
         <li>No active listings.</li>
         {% endfor %}
-    </ul>
+        </ul>
+    </div>
 {% endblock %}
