@@ -10,8 +10,44 @@ Index
 {% endblock %}
 
 {% block body %}
-    <div class="container-xl active-listing-container">
-        <h2>Active Listings</h2>
+    <div class="d-flex flex-row w-100 gap-3 py-4">
+        <div class="d-flex flex-row flex-grow">
+            <div class="d-flex flex-column justify-content-between listing-card-title sticky-top">
+                <span class="icon-user"></span>
+                <div class="container-fluid d-flex flex-column gap-3">
+                    <h2 style="font-weight: 600;">Active Listings</h2>
+                    <p>Please log-in to continue</p>
+                </div>
+                <span class="icon-user"></span>
+            </div>
+        </div>
+        <div class="d-flex flex-row flex-wrap w-100 gap-3 listing-card-container">
+            <div class="card border-primary listing-card">
+                <img class="card-img-top" src="holder.js/100px180/" alt="Title" />
+                <div class="card-body">
+                    <h4 class="card-title">Title</h4>
+                    <p class="card-text">Text</p>
+                </div>
+            </div>
+            <div class="listing-card">
+            </div>
+            <div class="listing-card">
+            </div>
+            <div class="listing-card">
+            </div>
+            <div class="listing-card">
+            </div>
+            <div class="listing-card">
+            </div>
+            <div class="listing-card">
+            </div>
+        </div>
+    </div>
+    <div style="height: 1000px"></div>
+
+
+
+    <!--    
     <ul>
         {% for active_listing in active_listings %}
         <li><a href="{% url 'listing' id=active_listing.id %}">{{ active_listing }}</a></li>
@@ -20,4 +56,5 @@ Index
         {% endfor %}
         </ul>
     </div>
+    -->
 {% endblock %}
