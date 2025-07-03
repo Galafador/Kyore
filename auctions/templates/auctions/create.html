@@ -5,10 +5,12 @@
 Create new listing
 {% endblock %}
 
-{% block additional_css %}<link href="{% static 'css/styles_create.css' %}" rel="stylesheet">{% endblock %}
+{% block additional_css %}
+<link href="{% static 'css/styles_create.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
+    <div class="container-sm mt-4">
         {% if message %}
             <div class="bg-danger text-white p-2 fs-6 rounded">{{ message }}</div>
         {% endif %}
@@ -21,13 +23,16 @@ Create new listing
         <form class="mt-4" action="{% url 'create_listing' %}" method="post">
             {% csrf_token %}
             {% for field in form %}
-            <div class="form-group form-group-kyore mb-4">
+            <div class="form-group form-group-kyore mb-3">
                 {{ field.errors }}
                 {{ field.label_tag }}
                 {{ field }}
             </div>
             {% endfor %}
-            <input class="btn btn-primary mt-4" type="submit" value="Create Listing">
+            <div class="d-flex flex-row gap-3 my-5">
+                <input class="btn btn-primary w-50" type="submit" value="Create Listing">
+                <a href="{% url 'index' %}" class="btn btn-danger w-50">Cancel</a>
+            </div>
         </form>
     </div>
 {% endblock %}
