@@ -4,7 +4,9 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
+
 from .models import *
+from .forms import ListingForm
 
 
 def index(request):
@@ -68,27 +70,31 @@ def register(request):
 
 @login_required
 def create_listing(request):
-    return render(request, "auctions/create.html") 
-    """if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        category = request.POST.get("category", "")
-        starting_bid = float(request.POST["starting_bid"])
-        image_url = request.POST.get("image_url", "")
-
-        Listing.objects.create(title=title,
-                            description=description,
-                            category=category,
-                            starting_bid=starting_bid,
-                            image_url=image_url)
+    if request.method == "POST":
+        form = ListingForm(request.POST)
+        if form.is_valid():
+            new_listing = form.save(commit=False)
+            new_listing.seller = request.user
+            new_listing.save()
+            return HttpResponseRedirect(reverse("listing", args=[new_listing.id]))
         
-        return HttpResponseRedirect(reverse("Index"))
+        else:
+            return render("auctions/create_listing.html", {
+                "form": form
+            })
 
+    form = ListingForm()
+    return render(request, "auctions/create.html", {
+        "form": form
+    })
+
+    """
     categories = Category.objects.all() + []
     return render(request, "auction/create.html", {
         "listing" : Listing,
         "categories" : categories,
-    })"""
+    })
+    """
 
 def categories_view(request):
     root_categories = Category.objects.filter(parent__isnull=True)
@@ -121,3 +127,6 @@ def listing(request, id):
         "highest_bid": listing.highest_bid,
         "highest_bidder": listing.highest_bidder
     })
+
+def watchlist(request, id):
+    return

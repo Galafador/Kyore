@@ -175,7 +175,7 @@ html, body, a {
     color: var(--color-text-caption);
     background-color: var(--color-backdrop, #FFFFFF);
     border: 1px solid var(--color-outline-light);
-    border-radius: 6rem;
+    border-radius: 1.1rem;
 }
 .form-control-kyore:focus {
     color: var(--color-text-caption);

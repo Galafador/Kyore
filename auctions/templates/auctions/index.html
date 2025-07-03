@@ -1,6 +1,13 @@
 {% extends "auctions/layout.html" %}
+{% block title %}
+Index
+{% endblock %}
 
 {% block body %}
+    {% if message %}
+        {{ message }}
+    {% endif %}
+        
     <h2>Active Listings</h2>
     <ul>
         {% for active_listing in active_listings %}
