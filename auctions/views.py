@@ -67,8 +67,9 @@ def register(request):
 
 
 @login_required
-def create(request): 
-    if request.method == "POST":
+def create_listing(request):
+    return render(request, "auctions/create.html") 
+    """if request.method == "POST":
         title = request.POST["title"]
         description = request.POST["description"]
         category = request.POST.get("category", "")
@@ -87,7 +88,7 @@ def create(request):
     return render(request, "auction/create.html", {
         "listing" : Listing,
         "categories" : categories,
-    })
+    })"""
 
 def categories_view(request):
     root_categories = Category.objects.filter(parent__isnull=True)
