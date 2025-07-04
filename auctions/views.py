@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
+
 
 from .models import *
 from .forms import ListingForm
@@ -66,7 +68,6 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
-
 
 @login_required
 def create_listing(request):
