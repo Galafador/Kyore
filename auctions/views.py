@@ -6,15 +6,23 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 
-
-from .models import *
+from .models import User, Category, Listing, Bid, Comment, Favorite
 from .forms import ListingForm
 
 
 def index(request):
-    active_listings = Listing.objects.all()
+    active_listings = Listing.objects.filter(is_active=True)
+
+    if request.user.is_authenticated:
+        favorited_listing_ids = set(
+            Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True)
+        )
+    else:
+        favorited_listing_ids = set()
+    
     return render(request, "auctions/index.html", {
-        "active_listings" : active_listings
+        "active_listings" : active_listings,
+        "favorited_listing_ids": favorited_listing_ids
     })
 
 
@@ -89,14 +97,6 @@ def create_listing(request):
         "form": form
     })
 
-    """
-    categories = Category.objects.all() + []
-    return render(request, "auction/create.html", {
-        "listing" : Listing,
-        "categories" : categories,
-    })
-    """
-
 def categories_view(request):
     root_categories = Category.objects.filter(parent__isnull=True)
 
@@ -131,3 +131,17 @@ def listing(request, id):
 
 def watchlist(request, id):
     return
+
+@login_required
+def favorite_listing(request, id):
+    if request.method == "POST":
+        listing = Listing.objects.get(id=id)
+        favorite, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
+        if not created:
+            #already favorited, will remove from favorite
+            favorite.delete()
+            return JsonResponse({"favorited": False})
+        else:
+            return JsonResponse({"favorited": True})
+    
+    return JsonResponse({"error": "Invalid response. GET instead of POST."}, status=400)
