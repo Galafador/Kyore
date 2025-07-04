@@ -12,4 +12,5 @@ urlpatterns = [
     path("get_child_categories", views.get_child_categories, name="get_child_categories"),
     path("create_listing", views.create_listing, name="create_listing"),
     path("watchlist", views.watchlist, name="watchlist"),
+    path("listings/<int:id>/favorite_listing", views.favorite_listing, name="favorite_listing")
 ]

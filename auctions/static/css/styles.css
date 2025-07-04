@@ -18,6 +18,7 @@
     /* Outline & Shadow Colors */
     --color-outline-brand: #8f5ff0;
     --color-outline-light: #ced4da;
+    --color-outline-superlight: #e9e9e9;
     --color-shadow-brand: #743ae848;
 
     --color-shadow-sharp: rgba(255, 255, 255, 0.75);
@@ -73,6 +74,27 @@ html, body, a {
     font-size: 3.5rem;
     letter-spacing: -0.2rem;
     user-select: none;
+}
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.text-truncate-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /*------------------Surface Styles------------------*/
@@ -169,6 +191,32 @@ html, body, a {
     box-shadow: 0 0 0 0.25rem transparent !important;
 }
 
+/* Favorite Button Styles */
+.btn-favorite {
+    color: var(--color-button-secondary-text);
+    background-color: var(--color-button-secondary);
+    border-color: var(--color-button-secondary-border);
+}
+.btn-favorite:hover {
+    color: var(--color-button-brand-hover);
+    background-color: var(--color-button-secondary-hover);
+    border-color: var(--color-button-secondary-hover-border);
+}
+.btn-favorite:focus {
+    color: var(--color-button-secondary-text);
+    background-color: var(--color-button-secondary-hover);
+    border-color: var(--color-button-secondary-focus-border);
+    box-shadow: 0 0 0 0.25rem var(--color-button-secondary-focus-shadow);
+}
+.btn-favorite:active, 
+.btn-favorite.active, 
+.show > .favorite.dropdown-toggle {
+    color: var(--color-button-secondary-text) !important;
+    background-color: var(--color-button-secondary-active) !important;
+    border-color: var(--color-button-secondary-active-border) !important;
+    box-shadow: 0 0 0 0.25rem transparent !important;
+}
+
 /*------------------Forms Styles------------------*/
 .form-control-kyore {
     padding: 0.4rem 1rem;
@@ -191,7 +239,7 @@ html, body, a {
 /*------------------SVG Icons------------------*/
 .icon-user {
     display: inline-block;
-    margin-inline: 0.5rem;
+    margin-inline: 0.25rem;
     width: 17px;
     height: 16px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 18 17" fill="none"><path d="M1.5 15.1667C3.44649 13.1021 6.08918 11.8333 9 11.8333C11.9108 11.8333 14.5535 13.1021 16.5 15.1667M12.75 4.75C12.75 6.82107 11.0711 8.5 9 8.5C6.92893 8.5 5.25 6.82107 5.25 4.75C5.25 2.67893 6.92893 1 9 1C11.0711 1 12.75 2.67893 12.75 4.75Z" stroke="%23333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat center center;
