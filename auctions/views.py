@@ -145,8 +145,18 @@ def favorite_listing(request, id):
         if not created:
             #already favorited, will remove from favorite
             favorite.delete()
-            return JsonResponse({"favorited": False})
+            favorited = False
+            message = "Removed from watchlist."
         else:
-            return JsonResponse({"favorited": True})
+            favorited = True
+            message = "Added to watchlist."
+
+        favorites_count = Favorite.objects.filter(listing=listing).count()
+
+        return JsonResponse({
+            "favorited": favorited,
+            "favorites_count": favorites_count,
+            "message": message
+        })
     
     return JsonResponse({"error": "Invalid response. GET instead of POST."}, status=400)

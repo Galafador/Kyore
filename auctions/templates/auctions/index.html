@@ -11,7 +11,10 @@ Index
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex flex-row w-100 gap-3 py-4">
+    <div id="messages-container" class="position-fixed start-50 translate-middle-x" style="z-index: 1500;">
+    </div>
+
+    <div class="d-flex flex-row w-100 gap-3 py-3">
         <div class="d-flex flex-row flex-grow">
             <div class="card-body d-flex flex-column py-2 justify-content-between listing-card-title sticky-top">
                 <span class="icon-user"></span>
@@ -24,15 +27,16 @@ Index
         </div>
         <div class="d-flex flex-row flex-wrap w-100 gap-3 listing-card-container">
             {% for listing in active_listings %}
-            <div class="card listing-card position-relative" data-id="{{ listing.id }}">
+            <div 
+                class="card listing-card position-relative" 
+                data-id="{{ listing.id }}"
+                data-csrf="{{csrf_token}}"
+                data-url="{% url 'favorite_listing' listing.id %}"
+                data-favorited="{% if listing.id in favorited_listing_ids %}true{% else %}false{% endif %}"
+            >
                 {% if user.is_authenticated %}
                 <button 
-                class="btn btn-favorite position-absolute top-0 end-0 m-2 p-2" 
-                style="z-index: 2;" 
-                data-favorited="{% if listing.id in favorited_listing_ids %}true{% else %}false{% endif %}"
-                data-url="{% url 'favorite_listing' listing.id %}"
-                data-csrf="{{csrf_token}}"
-                >
+                class="btn btn-favorite position-absolute top-0 end-0 m-2 p-2" style="z-index: 2;">
                     {% if listing.id in favorited_listing_ids %}
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
@@ -64,26 +68,34 @@ Index
                         </p>
                     </div>
                     <div class="d-flex w-100 h-100 d-flex align-items-end justify-content-end gap-2" style="background-color: rgba(0, 0, 255, 0);">
-                        <p class="card-text" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;">{{listing.favorites.count|format_thousands:0}}<span class="icon-user"></span></p>
-                        <p class="card-text" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;">{{listing.comments.count|format_thousands:0}}<span class="icon-user"></span></p>
+                        <p class="card-text favorites-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-favoritesCount="{{listing.favorites.count}}">{{listing.favorites.count|format_thousands:0}}</p>
+                        <span class="icon-user"></span>
+                        <p class="card-text comments-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-commentsCount="{{listing.comments.count}}">{{listing.comments.count|format_thousands:0}}</p>
+                        <span class="icon-user"></span>
                     </div>
                 </div>
+            </div>
+            {% empty %}
+            <div class="card listing-card position-relative">
+                <h4>Nothing to see here...</h4>
             </div>
             {% endfor %}
         </div>
     </div>
-    <div style="height: 1000px"></div>
     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll("btn-favorite").forEach(button => {
-                button.addEventListener("click", () => {
-                    const listingCard = button.closest(".listing-card")
-                    const listingId = listingCard.dataset.id
-                    const url = button.dataset.url
-                    const csrf = button.dataset.csrf
-                    const isFavorited = button.dataset.favorited === "true"
+            messagesContainer = document.getElementById("messages-container")
+            document.querySelectorAll(".listing-card").forEach(card => {
+                const listingId = card.dataset.id
+                const url = card.dataset.url
+                const csrf = card.dataset.csrf
+                let isFavorited = card.dataset.favorited === "true"
+                const favoriteButton = card.querySelector(".btn-favorite")
+                const favoritesCount = card.querySelector(".favorites-count")
 
+                favoriteButton.addEventListener("click", () => {
+                    console.log("favorite button is being clicked");
                     fetch(`${url}`, {
                         method: "POST",
                         headers: {
@@ -94,31 +106,44 @@ Index
                     .then(response => response.json())
                     .then(data => {
                         if (data.favorited !== undefined) {
-                            button.dataset.favorited = data.favorited;
-                            button.textContent = data.favorited ? 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+                            isFavorited = data.favorited;
+                            favoriteButton.innerHTML = data.favorited ? 
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
-                            </svg>
+                            </svg>`
                             :
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
-                            </svg>
+                            </svg>`;
+
+                            if (favoritesCount && data.favorites_count !== undefined) {
+                                favoritesCount.innerHTML = data.favorites_count
+                            }
+
+                            if (data.message) {
+                                console.log(data.message)
+                                messagesContainer.innerHTML = "";
+                                const alert = document.createElement('div')
+                                alert.className = "alert alert-success alert-dismissible fade show";
+                                alert.setAttribute("role", "alert")
+                                alert.innerHTML = `
+                                ${data.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                `;
+
+                                messagesContainer.appendChild(alert);
+
+                                //auto-close after 3 seconds
+                                setTimeout(() => {
+                                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                                    bsAlert.close();
+                                }, 3000);
+                            }
                         }
                     })
-                    .catch(error => console.error("Ajax error:", error))
+                    .catch(error => console.error("AJAX error: ", error))
                 })
             })
-        });
+        })
     </script>
-    
-    <!--    
-    <ul>
-        {% for active_listing in active_listings %}
-        <li><a href="{% url 'listing' id=active_listing.id %}">{{ active_listing }}</a></li>
-        {% empty %}
-        <li>No active listings.</li>
-        {% endfor %}
-        </ul>
-    </div>
-    -->
 {% endblock %}
