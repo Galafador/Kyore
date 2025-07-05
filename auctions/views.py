@@ -82,15 +82,18 @@ def create_listing(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
         if form.is_valid():
-            new_listing = form.save(commit=False)
-            new_listing.seller = request.user
-            new_listing.save()
-            messages.success(request, "Listing added successfully!")
-            return HttpResponseRedirect(reverse("listing", args=[new_listing.id]))
-        
+            try:
+                new_listing = form.save(commit=False)
+                new_listing.seller = request.user
+                new_listing.save()
+                messages.success(request, "Listing added successfully!")
+                return HttpResponseRedirect(reverse("listing", args=[new_listing.id]))
+            except(ValueError, TypeError):
+                messages.error(request, "Something went wrong when saving. Please try again.")
         else:
-            messages.error(request, "Something went wrong. Please try again.")
-            return render("auctions/create_listing.html", {
+            form.add_is_invalid_class()
+            messages.error(request, "Please correct the errors below.")
+            return render(request, "auctions/create.html", {
                 "form": form
             })
 
