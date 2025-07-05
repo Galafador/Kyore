@@ -85,9 +85,11 @@ def create_listing(request):
             new_listing = form.save(commit=False)
             new_listing.seller = request.user
             new_listing.save()
+            messages.success(request, "Listing added successfully!")
             return HttpResponseRedirect(reverse("listing", args=[new_listing.id]))
         
         else:
+            messages.error(request, "Something went wrong. Please try again.")
             return render("auctions/create_listing.html", {
                 "form": form
             })
