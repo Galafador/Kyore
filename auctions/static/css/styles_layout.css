@@ -10,16 +10,13 @@
     transition: 0.3s ease-out;
     transform: translateY(0);
 }
-
 .navbar.nav-kyore.nav-at-top {
     border: none;
     box-shadow: none;
 }
-
 .nav-hidden {
     transform: translateY(-100px);
 }
-
 .navbar.nav-kyore::before {
     content: '';
     position: absolute;
