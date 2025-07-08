@@ -26,7 +26,16 @@ Index
                     <p>See what the community <br> has to offer!</p>
                 </div>
                 
-                <a href="{% url 'create_listing' %}" class="btn btn-action">Start selling</a>
+                <a href="{% url 'create_listing' %}" class="btn btn-action d-flex gap-3 align-items-center">
+                    Start Selling
+                    <div class="btn-action-arrow-container" style="background-color: white;">
+                        <span class="btn-action-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 18L18 6M18 6H10M18 6V14" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
             </div>
         </div>
         <div class="d-flex flex-row flex-wrap w-100 gap-3 listing-card-container">
@@ -125,9 +134,9 @@ Index
                             }
 
                             if (data.message) {
-                                console.log(data.message)
                                 messagesContainer.innerHTML = "";
                                 const alert = document.createElement('div')
+                                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
                                 alert.className = "alert alert-success alert-dismissible fade show";
                                 alert.setAttribute("role", "alert")
                                 alert.innerHTML = `
@@ -139,7 +148,6 @@ Index
 
                                 //auto-close after 3 seconds
                                 setTimeout(() => {
-                                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
                                     bsAlert.close();
                                 }, 3000);
                             }

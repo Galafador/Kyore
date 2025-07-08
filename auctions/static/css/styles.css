@@ -223,14 +223,20 @@ html, body, a {
     color: var(--color-button-primary-text);
     background-color: var(--color-button-primary);
     border-color: var(--color-button-primary);
-    padding: 0.75rem 1.25rem;
+    padding: 0.25rem 0.25rem 0.25rem 1.25rem;
     border-radius: 2rem;
     width: fit-content;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: auto;
+    transition: 0.15s ease-out;
 }
 .btn-action:hover {
     color: var(--color-button-primary-text);
     background-color: var(--color-button-primary-hover);
     border-color: var(--color-button-primary-hover-border);
+    letter-spacing: 0.02rem;
+    padding: 0.25rem 0.25rem 0.25rem 1.5rem;
 }
 .btn-action:focus {
     color: var(--color-button-primary-text);
@@ -246,7 +252,23 @@ html, body, a {
     border-color: var(--color-button-primary-active-border) !important;
     box-shadow: 0 0 0 0.25rem transparent !important;
 }
-
+.btn-action-arrow-container {
+    padding: 0.5rem;
+    background-color: var(--color-backdrop);
+    border-radius: 2rem;
+}
+.btn-action-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease-out;
+}
+.btn-action:hover .btn-action-arrow {
+    transform: rotate(0deg);
+}
 
 /*------------------Forms Styles------------------*/
 .form-control-kyore {
