@@ -80,11 +80,19 @@ Index
                             {% endif %}
                         </p>
                     </div>
-                    <div class="d-flex w-100 h-100 d-flex align-items-end justify-content-end gap-2" style="background-color: rgba(0, 0, 255, 0);">
-                        <p class="card-text favorites-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-favoritesCount="{{listing.favorites.count}}">{{listing.favorites.count|format_thousands:0}}</p>
-                        <span class="icon-user"></span>
-                        <p class="card-text comments-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-commentsCount="{{listing.comments.count}}">{{listing.comments.count|format_thousands:0}}</p>
-                        <span class="icon-user"></span>
+                    <div class="d-flex w-100 h-100 d-flex align-items-end justify-content-end gap-1" style="background-color: rgba(0, 0, 255, 0);">
+                        <div id="icon-wish-counter-container" class="d-flex flex-row gap-2 mr-3">
+                            <p class="card-text favorites-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-favoritesCount="{{listing.favorites.count}}">{{listing.favorites.count|format_thousands:0}}</p>
+                            <span class="d-flex align-items-center" style="width: 20px; height: 20px; color: #484848">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 21" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.99431 4.77985C8.32819 2.832 5.54981 2.30804 3.46227 4.09168C1.37472 5.87532 1.08083 8.85748 2.72019 10.967C4.0832 12.7209 8.20816 16.4201 9.5601 17.6174C9.71136 17.7513 9.78698 17.8183 9.8752 17.8446C9.95219 17.8676 10.0364 17.8676 10.1134 17.8446C10.2016 17.8183 10.2773 17.7513 10.4285 17.6174C11.7805 16.4201 15.9054 12.7209 17.2684 10.967C18.9078 8.85748 18.6498 5.85656 16.5264 4.09168C14.4029 2.3268 11.6604 2.832 9.99431 4.77985Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+                        </div>
+                        <div idclass="icon-comment-counter-container" class="d-flex flex-row gap-2">
+                            <p class="card-text comments-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-commentsCount="{{listing.comments.count}}">{{listing.comments.count|format_thousands:0}}</p>
+                            <span class="d-flex align-items-center" style="width: 20px; height: 20px; color: #484848">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 21" fill="none"><path d="M10 2C14.6944 2 18.5 5.80558 18.5 10.5C18.5 15.1944 14.6944 19 10 19C8.87131 19 7.79178 18.7792 6.80371 18.3779C6.73618 18.3505 6.69169 18.333 6.65918 18.3203C6.65442 18.3211 6.64913 18.3223 6.64355 18.3232L3.58496 18.833C3.44843 18.8558 3.27984 18.8844 3.13281 18.8955C2.98096 18.907 2.72313 18.9128 2.44824 18.7949C2.11437 18.6516 1.84834 18.3856 1.70508 18.0518C1.58717 17.7769 1.59303 17.519 1.60449 17.3672C1.61561 17.2202 1.64424 17.0516 1.66699 16.915L2.17676 13.8564C2.17771 13.8505 2.1789 13.8449 2.17969 13.8398C2.16701 13.8074 2.14926 13.7632 2.12207 13.6963C1.72083 12.7082 1.5 11.6287 1.5 10.5C1.5 5.80558 5.30558 2 10 2ZM7 10C6.44772 10 6 10.4477 6 11C6 11.5523 6.44772 12 7 12C7.55228 12 8 11.5523 8 11C8 10.4477 7.55228 10 7 10ZM10 10C9.44772 10 9 10.4477 9 11C9 11.5523 9.44772 12 10 12C10.5523 12 11 11.5523 11 11C11 10.4477 10.5523 10 10 10ZM13 10C12.4477 10 12 10.4477 12 11C12 11.5523 12.4477 12 13 12C13.5523 12 14 11.5523 14 11C14 10.4477 13.5523 10 13 10Z" fill="currentColor"/></svg>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,7 +145,7 @@ Index
                                 messagesContainer.innerHTML = "";
                                 const alert = document.createElement('div')
                                 const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                                alert.className = "alert alert-success alert-dismissible fade show";
+                                alert.className = "alert alert-primary alert-dismissible fade show";
                                 alert.setAttribute("role", "alert")
                                 alert.innerHTML = `
                                 ${data.message}
