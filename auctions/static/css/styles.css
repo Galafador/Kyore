@@ -299,7 +299,7 @@ html, body, a {
     background-size: contain;
     vertical-align: middle;
 }
-/*------------------Card Styles------------------*/
+/*------------------Listing Card Styles------------------*/
 .listing-card-container {
     max-width: 1600px;
 }
@@ -318,4 +318,11 @@ html, body, a {
 }
 .listing-card:hover {
     box-shadow: 0 0 0 2px rgba(0,0,0,0.25);
+}
+/* Favorite button styles */
+.btn-favorite svg path {
+    fill: none;
+}
+.btn-favorite.favorited svg path {
+    fill: currentColor;
 }

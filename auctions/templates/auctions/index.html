@@ -49,16 +49,10 @@ Index
             >
                 {% if user.is_authenticated %}
                 <button 
-                class="btn btn-favorite position-absolute top-0 end-0 m-2 p-2" style="z-index: 2;">
-                    {% if listing.id in favorited_listing_ids %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+                class="btn btn-favorite position-absolute top-0 end-0 m-2 p-2 {% if listing.id in favorited_listing_ids %}favorited{% else %}{% endif %}" style="z-index: 2;" title="{% if listing.id in favorited_listing_ids %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
                     </svg>
-                    {% else %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
-                    </svg>
-                    {% endif %}
                 </button>
                 {% endif %}
                 <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
@@ -103,67 +97,6 @@ Index
             {% endfor %}
         </div>
     </div>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            messagesContainer = document.getElementById("messages-container")
-            document.querySelectorAll(".listing-card").forEach(card => {
-                const listingId = card.dataset.id
-                const url = card.dataset.url
-                const csrf = card.dataset.csrf
-                let isFavorited = card.dataset.favorited === "true"
-                const favoriteButton = card.querySelector(".btn-favorite")
-                const favoritesCount = card.querySelector(".favorites-count")
-
-                favoriteButton.addEventListener("click", () => {
-                    console.log("favorite button is being clicked");
-                    fetch(`${url}`, {
-                        method: "POST",
-                        headers: {
-                            "X-CSRFToken": csrf,
-                            "Accept": "application/json",
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.favorited !== undefined) {
-                            isFavorited = data.favorited;
-                            favoriteButton.innerHTML = data.favorited ? 
-                            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
-                            </svg>`
-                            :
-                            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
-                            </svg>`;
-
-                            if (favoritesCount && data.favorites_count !== undefined) {
-                                favoritesCount.innerHTML = data.favorites_count
-                            }
-
-                            if (data.message) {
-                                messagesContainer.innerHTML = "";
-                                const alert = document.createElement('div')
-                                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                                alert.className = "alert alert-primary alert-dismissible fade show";
-                                alert.setAttribute("role", "alert")
-                                alert.innerHTML = `
-                                ${data.message}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                `;
-
-                                messagesContainer.appendChild(alert);
-
-                                //auto-close after 3 seconds
-                                setTimeout(() => {
-                                    bsAlert.close();
-                                }, 3000);
-                            }
-                        }
-                    })
-                    .catch(error => console.error("AJAX error: ", error))
-                })
-            })
-        })
-    </script>
+    <!-- Toggle favorites script -->
+    <script src="{% static 'js/toggleFavorites.js' %}"></script>
 {% endblock %}
