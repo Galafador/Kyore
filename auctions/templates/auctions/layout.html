@@ -31,7 +31,7 @@
                             <a class="nav-link nav-link-kyore" href="{% url 'index' %}">Active Listings</a>
                         </li>
                         <li class="nav-item nav-item-kyore">
-                            <a class="nav-link nav-link-kyore" href="{% url 'show_categories' %}">Categories</a>
+                            <a class="nav-link nav-link-kyore" href="{% url 'categories' %}">Categories</a>
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item nav-item-kyore">
@@ -61,7 +61,7 @@
             </div>
         </nav>
 
-        <div class="container-fluid" style="margin-top: 80px;">
+        <div class="d-flex flex-column w-100" style="margin-top: 80px;">
             {% block body %}
             {% endblock %}
         </div>

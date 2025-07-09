@@ -1,4 +1,6 @@
 /*------------------Specific to page: Layout------------------*/
+
+/*------------------Navbar Styles------------------*/
 .navbar.nav-kyore {
     z-index: 1000;
     padding-block: 0.7rem;
@@ -77,4 +79,14 @@
     text-decoration: underline;
     text-underline-offset: 8px;
     text-decoration-thickness: 2px;
+}
+
+/*------------------Hero Styles------------------*/
+.sub-hero-container {
+    border-top: 1px solid var(--color-outline-dark);
+    border-bottom: 1px solid var(--color-outline-dark);
+    background-image: url(/static/images/svgicons/grid.svg);
+    background-repeat: repeat;
+    animation: scroll-bg 5s linear infinite;
+    
 }

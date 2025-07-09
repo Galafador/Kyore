@@ -107,7 +107,7 @@ def create_listing(request):
         "form": form
     })
 
-def categories_view(request):
+def categories(request):
     root_categories = Category.objects.filter(parent__isnull=True)
 
     return render(request, "auctions/categories.html",{

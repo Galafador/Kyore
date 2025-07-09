@@ -19,8 +19,9 @@
     --color-outline-brand: #8f5ff0;
     --color-outline-light: #ced4da;
     --color-outline-superlight: #e9e9e9;
+    --color-outline-dark: #212529;
+    --color-outline-superdark: #1A1A1A;
     --color-shadow-brand: #743ae848;
-
     --color-shadow-sharp: rgba(255, 255, 255, 0.75);
     --color-shadow-blur: rgba(217, 217, 217, 0.5);
 
@@ -73,6 +74,26 @@ html, body, a {
     font-style: normal;
     font-size: 3.5rem;
     letter-spacing: -0.2rem;
+    user-select: none;
+}
+.pixelify-sans-hero-logo {
+    color: var(--color-text-heading);
+    font-family: "Pixelify Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 15rem;
+    letter-spacing: -2rem;
+    user-select: none;
+}
+.pixelify-sans-hero-logotext {
+    color: var(--color-text-heading);
+    font-family: "Pixelify Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 15rem;
+    letter-spacing: -1rem;
     user-select: none;
 }
 .text-truncate-2 {
@@ -289,8 +310,6 @@ html, body, a {
     box-shadow: 0 0 0 0.25rem var(--color-shadow-brand);
 }
 
-/*------------------SVG Icons------------------*/
-
 /*------------------Listing Card Styles------------------*/
 .listing-card-container {
     max-width: 1600px;
@@ -317,4 +336,23 @@ html, body, a {
 }
 .btn-favorite.favorited svg path {
     fill: currentColor;
+}
+/*------------------Categories Card Styles------------------*/
+.top-categories-card {
+    border: none !important;
+    width: 240px;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 2rem;
+    background: var(--color-backdrop-invert, #2D2D2D);
+}
+
+/*------------------Animation Keyframes------------------*/
+@keyframes scroll-bg {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -79px 0;
+    }
 }
