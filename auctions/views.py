@@ -142,6 +142,7 @@ def listing(request, id):
 def watchlist(request, id):
     return
 
+# A view to handle ajax request to toggle favorited status of a listing
 @login_required
 def favorite_listing(request, id):
     if request.method == "POST":
