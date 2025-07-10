@@ -24,3 +24,4 @@ class ListingForm(ModelForm):
             if self.errors.get(field_name):
                 existing = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing} is-invalid".strip()
+

@@ -14,11 +14,11 @@ Index
     <div id="messages-container" class="position-fixed start-50 translate-middle-x" style="z-index: 1500;">
     </div>
 
-    <div class="hero d-flex flex-column gap-3 px-3" style="background-color: rgba(0, 128, 0, 0);">
+    <div class="hero d-flex flex-column gap-3 px-3">
         <div class="logo-hero pt-6">
-            <img src="{% static 'svg/logo-dark-hero.svg' %}" draggable="none" alt="kyore logo">
+            <img class="pr-5" src="{% static 'svg/logo-dark-hero.svg' %}" draggable="none" alt="kyore logo" style="max-width: 100vw;">
         </div>
-        <div class="d-flex align-items-center justify-content-between w-100" style="background-color: rgba(0, 0, 255, 0);">
+        <div class="d-flex align-items-center justify-content-between w-100">
             <span id="left-subtext" class="w-100">
                 <h5>kyō. Japanese. verb: <br> To compete. To bid. <br> + Re(tro)</h5>
             </span>
@@ -69,7 +69,7 @@ Index
         </div>
     </div>
 
-    <div class="d-flex flex-row w-100 gap-3 p-3 my-5">
+    <div class="d-flex flex-row w-100 gap-3 p-3 my-5 align-self-center" style="max-width: 1660px; background-color: rgba(255, 0, 0, 0);">
         <div class="d-flex flex-row flex-grow">
             <div class="card-body d-flex flex-column py-2 justify-content-between listing-card-title sticky-top">
                 <svg xmlns="http://www.w3.org/2000/svg" width="39" height="18" fill="none">
@@ -110,26 +110,42 @@ Index
                     </svg>
                 </button>
                 {% endif %}
+                {% if listing.is_active %}
                 <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
-                <div class="card-body p-3" style="height: 250px; background-color: rgba(0, 255, 170, 0);">
+                {% else %}
+                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209); filter: grayscale(0%)" />
+                <div class="position-absolute top-0 left-0 d-flex text-white align-items-center justify-content-center rounded" style="pointer-events: none; z-index: 9; width: 298px; height: 300px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px);">
+                    <div class="d-flex flex-column w-100 bg-dark">
+                        <p style="align-self: center; margin: 0; padding: 1rem;">This listing has ended</p>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="card-body p-3" style="max-height: 220px;">
                     <h5 class="card-title text-truncate-2" style="font-weight: 600;">{{listing.title}}</h5>
                     <p class="card-text text-truncate-4" style="font-size: 0.875rem;">
                         {{ listing.description }}
                     </p>
                     <a href="{% url 'listing' id=listing.id %}" class="stretched-link"></a>
                 </div>
-                <div class="card-body px-3 d-flex align-items-center justify-content-center" style="background-color: rgba(0, 255, 76, 0);">
-                    <div class="h-100 d-flex align-items-center justify-content-start" style="min-width: fit-content; background-color: rgba(255, 0, 0, 0);">
-                        <p style="font-weight: 800; font-size: 1.75rem; padding: 0; margin: 0;">
-                            $
-                            {% if listing.has_bids %}
-                            {{ listing.highest_bid|format_thousands_then_superscript:2 }}
-                            {% else %}
-                            {{ listing.starting_bid|format_thousands_then_superscript:2 }}
-                            {% endif %}
+                <div class="card-body d-flex">
+                    <div class="w-100 d-flex flex-column align-self-end">
+                        <div class="d-flex">
+                            <span style="font-family: 'Pixelify Sans', sans-serif; font-weight: 800; font-size: 1.75rem; padding: 0; margin: 0;">
+                                $
+                            </span>
+                            <p style="font-weight: 800; font-size: 1.75rem; padding: 0; margin: 0;">
+                                {% if listing.has_bids %}
+                                {{ listing.highest_bid|format_thousands_then_superscript:2 }}
+                                {% else %}
+                                {{ listing.starting_bid|format_thousands_then_superscript:2 }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <p style="font-weight: 600; font-size: 0.85rem; padding: 0; margin: 0;">
+                            {{listing.bids.count}} Bids
                         </p>
                     </div>
-                    <div class="d-flex w-100 h-100 d-flex align-items-end justify-content-end" style="background-color: rgba(0, 0, 255, 0);">
+                    <div class="d-flex w-100 d-flex align-items-end align-self-end justify-content-end">
                         <div id="icon-wish-counter-container" class="d-flex flex-row gap-2 mr-3">
                             <p class="card-text favorites-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-favoritesCount="{{listing.favorites.count}}">{{listing.favorites.count|format_thousands:0}}</p>
                             <span class="d-flex align-items-center" style="width: 20px; height: 20px; color: #484848">
@@ -146,9 +162,7 @@ Index
                 </div>
             </div>
             {% empty %}
-            <div class="card listing-card position-relative">
                 <h4>Nothing to see here...</h4>
-            </div>
             {% endfor %}
         </div>
     </div>

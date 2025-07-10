@@ -35,7 +35,7 @@
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item nav-item-kyore">
-                            <a class="nav-link nav-link-kyore" href="#">Watchlist</a>
+                            <a class="nav-link nav-link-kyore" href="{% url 'watchlist' %}">Watchlist</a>
                         </li>
                         <li class="nav-item nav-item-kyore">
                             <a class="nav-link nav-link-kyore" href="{% url 'create_listing' %}">New listing</a>
@@ -65,7 +65,7 @@
             {% block body %}
             {% endblock %}
         </content>
-
+        
         <footer class="footer">
             <div id="logo-footer" style="color: var(--color-text-heading-invert)">
                 <svg width="173" height="45" viewBox="0 0 173 45" fill="none" xmlns="http://www.w3.org/2000/svg">

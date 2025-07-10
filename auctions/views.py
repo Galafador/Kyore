@@ -139,8 +139,12 @@ def listing(request, id):
         "highest_bidder": listing.highest_bidder
     })
 
-def watchlist(request, id):
-    return
+@login_required
+def watchlist_view(request):
+    watchlist = Listing.objects.filter(favorites__user=request.user)
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist
+    })
 
 # A view to handle ajax request to toggle favorited status of a listing
 @login_required

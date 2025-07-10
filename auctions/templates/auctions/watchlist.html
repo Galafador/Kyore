@@ -1,0 +1,111 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% load number_filters %}
+
+{% block title %}
+Watchlist
+{% endblock %}
+
+{% block body %}
+<div class="d-flex flex-row min-vh-100 h-100 w-100 justify-content-between" style="background-color: rgba(0, 128, 0, 0);">
+    <div class="side-animated-border" style="background-color: rgba(0, 0, 255, 0);"></div>
+    <div class="d-flex flex-row w-100 gap-3 p-3" style="max-width: 1660px; background-color: rgba(255, 0, 0, 0);">
+        <div class="d-flex flex-row flex-grow">
+            <div class="card-body d-flex flex-column py-2 justify-content-between listing-card-title sticky-top">
+                <svg xmlns="http://www.w3.org/2000/svg" width="39" height="18" fill="none">
+                    <path fill="currentColor" d="M7.48 17.1v-1.78H5.7v-1.8H3.88v-1.76H2.1V9.98H.3V7.76h1.8v-1.8h1.78V4.18H5.7V2.42h1.78V.619999H9.7V2.88H7.88v1.78H6.1v1.78H4.28V8.2h-1.8v1.3h1.8v1.78H6.1v1.78h1.78v1.78H9.7v2.26H7.48Zm1.61219 0v-2.26h1.80001v-1.78h1.8v-1.78h1.8V9.5h1.8V8.2h-1.8V6.44h-1.8V4.66h-1.8V2.88H9.09219V.619999h2.18001V2.42h1.8v1.76h1.82v1.78h1.78v1.8h1.82v2.22h-1.82v1.78h-1.78v1.76h-1.82v1.8h-1.8v1.78H9.09219Zm18.77221 0v-1.78h-1.78v-1.8h-1.82v-1.76h-1.78V9.98h-1.8V7.76h1.8v-1.8h1.78V4.18h1.82V2.42h1.78V.619999h2.22V2.88h-1.82v1.78h-1.78v1.78h-1.82V8.2h-1.8v1.3h1.8v1.78h1.82v1.78h1.78v1.78h1.82v2.26h-2.22Zm1.6122 0v-2.26h1.8v-1.78h1.8v-1.78h1.8V9.5h1.8V8.2h-1.8V6.44h-1.8V4.66h-1.8V2.88h-1.8V.619999h2.18V2.42h1.8v1.76h1.82v1.78h1.78v1.8h1.82v2.22h-1.82v1.78h-1.78v1.76h-1.82v1.8h-1.8v1.78h-2.18Z"/>
+                </svg>
+                <div class="container-fluid d-flex flex-column gap-2">
+                    <h2 style="font-weight: 600;">Watchlist</h2>
+                    <p>Items you've saved <br> in your watchlist</p>
+                </div>
+                
+                <a href="{% url 'categories' %}" class="btn btn-action d-flex gap-3 align-items-center">
+                    Find More
+                    <div class="btn-action-arrow-container" style="background-color: white;">
+                        <span class="btn-action-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 18L18 6M18 6H10M18 6V14" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="d-flex flex-row flex-wrap w-100 gap-3 listing-card-container">
+            {% for listing in watchlist %}
+            <div 
+                class="card listing-card position-relative" 
+                data-id="{{ listing.id }}"
+                data-csrf="{{csrf_token}}"
+                data-url="{% url 'favorite_listing' listing.id %}"
+                data-favorited="{% if listing.id in favorited_listing_ids %}true{% else %}false{% endif %}"
+            >
+                <button 
+                class="btn btn-favorite position-absolute top-0 end-0 m-2 p-2 favorited" style="z-index: 10;" title="Remove from Watchlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.993 5.136c-2-2.338-5.333-2.966-7.838-.826s-2.858 5.719-.89 8.25c1.635 2.105 6.585 6.544 8.207 7.98.182.162.272.242.378.274a.504.504 0 0 0 .286 0c.106-.032.197-.112.378-.273 1.623-1.437 6.573-5.876 8.208-7.98 1.967-2.532 1.658-6.133-.89-8.251-2.549-2.118-5.84-1.512-7.839.826Z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                {% if listing.is_active %}
+                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
+                {% else %}
+                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209); filter: grayscale(0%)" />
+                <div class="position-absolute top-0 left-0 d-flex text-white align-items-center justify-content-center rounded" style="pointer-events: none; z-index: 9; width: 298px; height: 300px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px);">
+                    <div class="d-flex flex-column w-100 bg-dark">
+                        <p style="align-self: center; margin: 0; padding: 1rem;">This listing has ended</p>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="card-body p-3" style="max-height: 220px; background-color: rgba(0, 255, 170, 0);">
+                    <h5 class="card-title text-truncate-2" style="font-weight: 600;">{{listing.title}}</h5>
+                    <p class="card-text text-truncate-4" style="font-size: 0.875rem;">
+                        {{ listing.description }}
+                    </p>
+                    <a href="{% url 'listing' id=listing.id %}" class="stretched-link"></a>
+                </div>
+                <div class="card-body d-flex">
+                    <div class="w-100 d-flex flex-column align-self-end">
+                        <div class="d-flex">
+                            <span style="font-family: 'Pixelify Sans', sans-serif; font-weight: 800; font-size: 1.75rem; padding: 0; margin: 0;">
+                                $
+                            </span>
+                            <p style="font-weight: 800; font-size: 1.75rem; padding: 0; margin: 0;">
+                                {% if listing.has_bids %}
+                                {{ listing.highest_bid|format_thousands_then_superscript:2 }}
+                                {% else %}
+                                {{ listing.starting_bid|format_thousands_then_superscript:2 }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <p style="font-weight: 600; font-size: 0.85rem; padding: 0; margin: 0;">
+                            {{listing.bids.count}} Bids
+                        </p>
+                    </div>
+                    <div class="d-flex w-100 d-flex align-items-end align-self-end justify-content-end">
+                        <div id="icon-wish-counter-container" class="d-flex flex-row gap-2 mr-3">
+                            <p class="card-text favorites-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-favoritesCount="{{listing.favorites.count}}">{{listing.favorites.count|format_thousands:0}}</p>
+                            <span class="d-flex align-items-center" style="width: 20px; height: 20px; color: #484848">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 21" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.99431 4.77985C8.32819 2.832 5.54981 2.30804 3.46227 4.09168C1.37472 5.87532 1.08083 8.85748 2.72019 10.967C4.0832 12.7209 8.20816 16.4201 9.5601 17.6174C9.71136 17.7513 9.78698 17.8183 9.8752 17.8446C9.95219 17.8676 10.0364 17.8676 10.1134 17.8446C10.2016 17.8183 10.2773 17.7513 10.4285 17.6174C11.7805 16.4201 15.9054 12.7209 17.2684 10.967C18.9078 8.85748 18.6498 5.85656 16.5264 4.09168C14.4029 2.3268 11.6604 2.832 9.99431 4.77985Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+                        </div>
+                        <div idclass="icon-comment-counter-container" class="d-flex flex-row gap-2">
+                            <p class="card-text comments-count" style="margin: 0; padding: 0; font-size: 0.75rem; font-weight: 700;" data-commentsCount="{{listing.comments.count}}">{{listing.comments.count|format_thousands:0}}</p>
+                            <span class="d-flex align-items-center" style="width: 20px; height: 20px; color: #484848">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 21" fill="none"><path d="M10 2C14.6944 2 18.5 5.80558 18.5 10.5C18.5 15.1944 14.6944 19 10 19C8.87131 19 7.79178 18.7792 6.80371 18.3779C6.73618 18.3505 6.69169 18.333 6.65918 18.3203C6.65442 18.3211 6.64913 18.3223 6.64355 18.3232L3.58496 18.833C3.44843 18.8558 3.27984 18.8844 3.13281 18.8955C2.98096 18.907 2.72313 18.9128 2.44824 18.7949C2.11437 18.6516 1.84834 18.3856 1.70508 18.0518C1.58717 17.7769 1.59303 17.519 1.60449 17.3672C1.61561 17.2202 1.64424 17.0516 1.66699 16.915L2.17676 13.8564C2.17771 13.8505 2.1789 13.8449 2.17969 13.8398C2.16701 13.8074 2.14926 13.7632 2.12207 13.6963C1.72083 12.7082 1.5 11.6287 1.5 10.5C1.5 5.80558 5.30558 2 10 2ZM7 10C6.44772 10 6 10.4477 6 11C6 11.5523 6.44772 12 7 12C7.55228 12 8 11.5523 8 11C8 10.4477 7.55228 10 7 10ZM10 10C9.44772 10 9 10.4477 9 11C9 11.5523 9.44772 12 10 12C10.5523 12 11 11.5523 11 11C11 10.4477 10.5523 10 10 10ZM13 10C12.4477 10 12 10.4477 12 11C12 11.5523 12.4477 12 13 12C13.5523 12 14 11.5523 14 11C14 10.4477 13.5523 10 13 10Z" fill="currentColor"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <h4>Nothing to see here...</h4>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="side-animated-border"></div>
+</div>
+
+<!-- Toggle favorites script -->
+<script src="{% static 'js/toggleFavoritesFromWatchlist.js' %}"></script>
+{% endblock %}
