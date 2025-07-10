@@ -19,7 +19,7 @@
     <body style="min-height: 100vh;">
         <nav id="nav" class="navbar navbar-expand-lg nav-kyore fixed-top nav-at-top">
             <div class="container-fluid">
-                <a href="{% url 'index' %}" class="nav-logo">
+                <a href="{% url 'index' %}" class="nav-logo" title="Back to homepage">
                     <img class="nav-logo" src="{% static '/images/Logo-navbar.webp' %}" alt="kyore logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -61,10 +61,19 @@
             </div>
         </nav>
 
-        <div class="d-flex flex-column w-100" style="margin-top: 80px;">
+        <content class="d-flex flex-column w-100 min-vh-100" style="margin-top: 100px;">
             {% block body %}
             {% endblock %}
-        </div>
+        </content>
+
+        <footer class="footer">
+            <div id="logo-footer" style="color: var(--color-text-heading-invert)">
+                <svg width="173" height="45" viewBox="0 0 173 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.112 39.944V35.72H13.84V31.544H9.52V27.368H5.248V23.144H0.976V17.24H5.296V13.064H9.52V8.84H13.84V4.664H18.112V0.487998H23.824V6.488H19.504V10.616H15.28V14.84H10.912V19.016H6.688V21.368H10.912V25.592H15.28V29.72H19.504V33.944H23.824V39.944H18.112ZM23.5173 39.944V33.944H27.8373V29.72H32.1093V25.592H36.3813V21.368H40.7013V19.016H36.3813V14.84H32.1093V10.616H27.7893V6.488H23.5173V0.487998H29.2293V4.664H33.5013V8.84H37.7733V13.064H41.9973V17.24H46.3653V23.144H42.0453V27.368H37.7733V31.544H33.5013V35.72H29.2293V39.944H23.5173ZM49.8025 35.576V4.712H54.6505V22.04H58.4905V17.768H67.2265V13.4H72.1225V18.2H67.7065V22.52H58.9705V26.408H67.7065V30.776H72.1225V35.576H67.2265V31.256H58.4905V26.888H54.6505V35.576H49.8025ZM78.958 44.264V39.944H74.59V35.144H79.438V39.464H92.062V31.256H78.958V26.888H74.59V13.4H79.438V26.408H92.062V13.4H96.91V39.944H92.542V44.264H78.958ZM104.683 35.576V31.256H100.315V17.768H104.683V13.4H118.219V17.768H122.635V31.256H118.219V35.576H104.683ZM105.163 30.776H117.739V18.2H105.163V30.776ZM104.875 9.848V6.008H118.411V9.848H104.875ZM126.04 35.576V17.768H130.408V13.4H143.944V17.768H148.36V22.52H143.464V18.2H130.888V35.576H126.04ZM154.68 35.576V31.256H150.312V17.768H154.68V13.4H168.216V17.768H172.632V22.52H167.736V18.2H155.16V22.04H163.896V26.888H155.16V30.776H167.736V26.36H172.632V31.208H168.216V35.576H154.68Z" fill="currentColor"/>
+                </svg>
+            </div>
+            <p style="color: var(--color-text-heading-invert)">©2025</p>
+        </footer>
 
         <!--SVG Filter for Navbar-->
         <!--

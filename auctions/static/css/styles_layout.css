@@ -81,12 +81,19 @@
     text-decoration-thickness: 2px;
 }
 
-/*------------------Hero Styles------------------*/
-.sub-hero-container {
-    border-top: 1px solid var(--color-outline-dark);
-    border-bottom: 1px solid var(--color-outline-dark);
-    background-image: url(/static/images/svgicons/grid.svg);
-    background-repeat: repeat;
-    animation: scroll-bg 5s linear infinite;
-    
+/*------------------Footer Styles------------------*/
+.footer {
+    display: flex;
+    gap: 0.5rem;
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+    padding: 24px;
+    background-color: var(--color-backdrop-invert, #2D2D2D);
+    background-image: url(/static/images/bg_footer_bw.webp);
+    background-repeat: no-repeat;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    align-self: stretch;
 }
