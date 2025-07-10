@@ -1,4 +1,3 @@
-from mptt.admin import DraggableMPTTAdmin
 from django.contrib import admin
 
 from .models import *
@@ -13,9 +12,12 @@ class UserAdmin(admin.ModelAdmin):
 class BidAdmin(admin.ModelAdmin):
     list_display = ("bidder", "amount", "listing")
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "parent", "image_url", "description")
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Listing, ListingAdmin)
 admin.site.register(Bid, BidAdmin)
 admin.site.register(Comment)
-admin.site.register(Category, DraggableMPTTAdmin)
+admin.site.register(Category)
 admin.site.register(Favorite)

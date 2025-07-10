@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'mptt',
     'auctions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -122,9 +121,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Set default for primary key globally
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login URL
 LOGIN_URL = '/login'

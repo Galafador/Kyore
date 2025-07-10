@@ -1,7 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
-from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 
 class User(AbstractUser):
@@ -11,17 +10,44 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username}"
 
-class Category(MPTTModel):
+class Category(models.Model):
     name = models.CharField(max_length=64)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
-    parent = TreeForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True, blank=True)
+
     class Meta:
         verbose_name_plural = "Categories"
-    class MPPTMeta:
-        order_insertion_by = ['name']
+
     def __str__(self):
-        return f"{self.name}"
+        if self.parent == None:
+            return f"[PARENT] {self.name}"
+        else:
+            return f"{self.name}"
+    
+    def get_ancestors(self):
+        """
+        returns an array of all ancestors
+        """
+        ancestors = []
+        current = self.parent
+        while current:
+            ancestors.append(current)
+            current = current.parent
+        return ancestors[::1] #return in order of oldest ancestor to immediate parent
+
+    def clean(self):
+        #Only allow 1 level of children, (if chosen parent element have a parent, return)
+        if self.parent.parent != None:
+            raise ValidationError({
+                'parent': 'Please only pick [PARENT] category as parent'
+            })
+    
+    def save(self, *args, **kwargs):
+        #validate before saving
+        self.full_clean()
+        super().save(*args, **kwargs)
+
 
 class Listing(models.Model):
     title = models.CharField(max_length=64)
