@@ -109,24 +109,21 @@ def create_listing(request):
 
 def categories(request):
     root_categories = Category.objects.filter(parent__isnull=True)
-
-    return render(request, "auctions/categories.html",{
+    return render(request, "auctions/categories.html", {
         "root_categories" : root_categories
     })
 
-#a view to handle ajax request to fetch child categories.
 def get_child_categories(request):
     parent_id = request.GET.get("parent_id")
     if not parent_id:
         return JsonResponse({"error": "No parent_id provided"}, status=400)
     try:
         parent_category = Category.objects.get(id=parent_id)
-        child_categories = parent_category.get_children()
-        data = [{"id": cat.id, "name": cat.name, "is_leaf":cat.is_leaf_node()} for cat in child_categories]
-        return JsonResponse({"child_categories" : data})
+        child_categories = parent_category.children.all()
+        data = [{"id": cat.id, "name": cat.name, "parentId": parent_id, "has_children": cat.has_children()} for cat in child_categories]
+        return JsonResponse({"child_categories": data}, status=200)
     except Category.DoesNotExist:
         return JsonResponse({"error": "Parent category not found."}, status=404)
-
 
 def listing(request, id):
     listing = Listing.objects.get(id=id)

@@ -15,16 +15,10 @@ class Category(models.Model):
     parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
-
     class Meta:
         verbose_name_plural = "Categories"
-
     def __str__(self):
-        if self.parent == None:
-            return f"[PARENT] {self.name}"
-        else:
             return f"{self.name}"
-    
     def get_ancestors(self):
         """
         returns an array of all ancestors
@@ -35,18 +29,8 @@ class Category(models.Model):
             ancestors.append(current)
             current = current.parent
         return ancestors[::1] #return in order of oldest ancestor to immediate parent
-
-    def clean(self):
-        #Only allow 1 level of children, (if chosen parent element have a parent, return)
-        if self.parent.parent != None:
-            raise ValidationError({
-                'parent': 'Please only pick [PARENT] category as parent'
-            })
-    
-    def save(self, *args, **kwargs):
-        #validate before saving
-        self.full_clean()
-        super().save(*args, **kwargs)
+    def has_children(self):
+        return self.children.exists()
 
 
 class Listing(models.Model):

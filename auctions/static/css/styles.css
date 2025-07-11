@@ -1,6 +1,5 @@
 /*------------------Defining Variables------------------*/
 :root {
-    
     /* Text Colors */
     --color-text-caption: #212529;
     --color-text-paragraph: #212529;
@@ -8,10 +7,13 @@
     --color-text-heading-invert: #F2F2F2;
     --color-text-link: #1a1a1a;
     --color-text-link-hover: #743AE8;
+    --color-text-brand: #4d1ab3;
 
     /* Backdrop & Surface Colors */
     --color-brand-primary: #743AE8;
+    --color-brand-secondary: #e4d7ff;
     --color-backdrop: #FFFFFF;
+    --color-backdrop-darker: #eeeeee;
     --color-backdrop-invert: #2d2d2d;
     --color-backdrop-nav: rgba(255, 255, 255, 0.4);
 
@@ -59,7 +61,12 @@
 }
 
 /*------------------Set Defaults------------------*/
-html, body, a {
+
+
+html, body {
+    --bs-body-bg: var(--color-backdrop);
+    --bs-white: var(--color-text-heading-invert);
+    
     padding: 0;
     margin: 0;
     font-family: var(--font-family-default) !important;
@@ -378,8 +385,22 @@ html, body, a {
     background-repeat: repeat;
     animation: scroll-bg 5s linear infinite;
 }
+.border-left-light {
+    border-left:  1px solid var(--color-outline-light);
+}
+.border-right-light {
+    border-right:  1px solid var(--color-outline-light);
+}
 .side-animated-border::before {
     content: "";
+}
+
+/*------------------Animation Classes------------------*/
+.transition-200 {
+    transition: 0.2s ease;
+}
+.rotate-180 {
+    transform: rotate(180deg);
 }
 
 /*------------------Animation Keyframes------------------*/

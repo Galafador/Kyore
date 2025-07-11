@@ -10,7 +10,9 @@ Create new listing
 {% endblock %}
 
 {% block body %}
-    <div class="container-sm pt-3">
+<div class="d-flex flex-row min-vh-100 h-100 w-100 justify-content-between">
+    <div class="side-animated-border border-right-light"></div>
+    <div class="container-sm pt-5">
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -46,4 +48,7 @@ Create new listing
             </div>
         </form>
     </div>
+    <div class="side-animated-border border-left-light"></div>
+</div>
+
 {% endblock %}
