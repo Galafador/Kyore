@@ -9,14 +9,15 @@ from django.urls import reverse
 from .models import User, Category, Listing, Bid, Comment, Favorite
 from .forms import ListingForm
 
+def get_favorited_listing_ids(request):
+    ids = set(Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True))
+    return ids
 
 def index(request):
     active_listings = Listing.objects.filter(is_active=True)
 
     if request.user.is_authenticated:
-        favorited_listing_ids = set(
-            Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True)
-        )
+        favorited_listing_ids = get_favorited_listing_ids(request)
     else:
         favorited_listing_ids = set()
     
@@ -126,10 +127,13 @@ def categories(request):
             messages.error(request, "Invalid category selected.")
             return HttpResponseRedirect(reverse("categories"))
 
+        favorited_listing_ids = get_favorited_listing_ids(request)
         root_categories = Category.objects.filter(parent__isnull=True)
         return render(request, "auctions/categories.html", {
             "listings": listings,
             "root_categories": root_categories,
+            "favorited_listing_ids": favorited_listing_ids,
+            "category": category
         })
 
     root_categories = Category.objects.filter(parent__isnull=True)
