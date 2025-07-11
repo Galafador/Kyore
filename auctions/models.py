@@ -29,6 +29,17 @@ class Category(models.Model):
             ancestors.append(current)
             current = current.parent
         return ancestors[::1] #return in order of oldest ancestor to immediate parent
+    def get_descendants_ids(self):
+        """
+        returns an array of all descendants ids plus itself recursively
+        """
+        descendants_ids = [self.id]
+        def getIds(children):
+            for child in children:
+                descendants_ids.append(child.id)
+                getIds(child.children.all())
+        getIds(self.children.all())
+        return descendants_ids
     def has_children(self):
         return self.children.exists()
 

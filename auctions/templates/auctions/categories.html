@@ -10,8 +10,19 @@ Select Category
 {% endblock %}
 
 {% block body %}
-<div class="d-flex flex-column align-items-center justify-content-center flex-grow-1" style="background-color: rgba(0, 128, 0, 0);">
-    <div class="d-flex flex-column w-100 h-100  sub-hero-container py-5" style="background-color: rgba(255, 0, 0, 0);">
+{% if messages %}
+    <div class="messages position-fixed start-50 translate-middle-x" style="z-index: 1500;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert" role="alert">
+            {{ message }}
+            <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="d-flex flex-column align-items-center{% if listings %} justify-content-start{% else %} justify-content-center{% endif %} flex-grow-1" style="background-color: rgba(0, 128, 0, 0);">
+    <div class="d-flex flex-column w-100 h-100  sub-hero-container my-3 py-5" style="background-color: rgba(255, 0, 0, 0);">
         <div class="category-selector-container">
             <div id="dropdownHeader" class="dropdown-header closed">
                 <span id="selectedCategoryText" class="text-secondary user-select-none">Select a category...</span>
@@ -38,7 +49,7 @@ Select Category
                 </div>
             </div>
         </div>
-        <form method="POST" class="container" style="max-width: 600px;">
+        <form method="POST" action="{% url 'categories' %}" class="container" style="max-width: 600px;">
             {% csrf_token %}
             <div class="form-group mt-2">
                 <input id="selectedCategoryForm" type="number" name="category" hidden required>
@@ -46,7 +57,12 @@ Select Category
             <input class="btn btn-primary w-100" type="submit" value="Search this category" aria-label="Search button">
         </form>
     </div>
-
+    
+    {% if listings %}
+    <div class="listings w-100 bg-dark text-white">
+        {{ listings }}
+    </div>
+    {% endif %}
 </div>
 
 <script>

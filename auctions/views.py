@@ -108,6 +108,30 @@ def create_listing(request):
     })
 
 def categories(request):
+    if request.method == "POST":
+        category_id = request.POST.get("category")
+        if not category_id:
+            messages.error(request, "Please select a category")
+            return HttpResponseRedirect(reverse("categories"))
+
+        try:
+            category = Category.objects.get(id=int(category_id))
+            descendant_category_ids = category.get_descendants_ids()
+            listings = Listing.objects.filter(category_id__in=descendant_category_ids)
+
+            if not listings.exists():
+                messages.error(request, "No listings found in this category")
+
+        except (Category.DoesNotExist, ValueError, TypeError):
+            messages.error(request, "Invalid category selected.")
+            return HttpResponseRedirect(reverse("categories"))
+
+        root_categories = Category.objects.filter(parent__isnull=True)
+        return render(request, "auctions/categories.html", {
+            "listings": listings,
+            "root_categories": root_categories,
+        })
+
     root_categories = Category.objects.filter(parent__isnull=True)
     return render(request, "auctions/categories.html", {
         "root_categories" : root_categories

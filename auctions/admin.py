@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ("title", "description", "seller", "is_active", "winner")
+    list_display = ("title", "description", "seller", "is_active", "winner", "category")
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ("username", "first_name", "last_name", "balance")
