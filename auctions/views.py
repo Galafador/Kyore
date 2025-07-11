@@ -109,36 +109,30 @@ def create_listing(request):
     })
 
 def categories(request):
-    if request.method == "POST":
-        category_id = request.POST.get("category")
-        if not category_id:
-            messages.error(request, "Please select a category")
-            return HttpResponseRedirect(reverse("categories"))
+    category_id = request.GET.get('categoryId')
 
-        try:
-            category = Category.objects.get(id=int(category_id))
-            descendant_category_ids = category.get_descendants_ids()
-            listings = Listing.objects.filter(category_id__in=descendant_category_ids)
+    #initialize listings and category
+    root_categories= Category.objects.filter(parent__isnull=True)
+    listings = []
+    category = []
 
-            if not listings.exists():
-                messages.error(request, "No listings found in this category")
-
-        except (Category.DoesNotExist, ValueError, TypeError):
-            messages.error(request, "Invalid category selected.")
-            return HttpResponseRedirect(reverse("categories"))
-
-        favorited_listing_ids = get_favorited_listing_ids(request)
-        root_categories = Category.objects.filter(parent__isnull=True)
+    if not category_id: #GET with empty query parameter
         return render(request, "auctions/categories.html", {
-            "listings": listings,
-            "root_categories": root_categories,
-            "favorited_listing_ids": favorited_listing_ids,
-            "category": category
+        "root_categories": root_categories,
         })
-
-    root_categories = Category.objects.filter(parent__isnull=True)
+    
+    try:
+        category = Category.objects.get(id=int(category_id))
+        descendant_category_ids = category.get_descendants_ids()
+        listings = Listing.objects.filter(category_id__in=descendant_category_ids)
+        if not listings.exists():
+            messages.error(request, "No listings found in this category")
+    except (UnboundLocalError, Category.DoesNotExist, ValueError, TypeError):
+        messages.error(request, "Invalid category selected.")
     return render(request, "auctions/categories.html", {
-        "root_categories" : root_categories
+        "root_categories": root_categories,
+        "listings": listings,
+        "category": category
     })
 
 def get_child_categories(request):

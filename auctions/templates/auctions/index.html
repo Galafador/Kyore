@@ -40,25 +40,27 @@ Index
         </a>
         <div class="d-flex w-100 justify-content-end">
             <p style="transform: rotate(-90deg) translateY(150%) translateX(40%); margin: 0; padding: 0; align-self: flex-end; font-size: 2.5rem; font-weight: 600; letter-spacing: -0.8px;">Top Categories</p>
-            <form method="POST" action="{% url 'categories' %}" class="top-categories-container d-flex gap-2">
-                {% csrf_token %}
-                <input type="hidden" name="category" id="categoryInput">
-                <div class="card top-categories-card bg-dark text-white" style="cursor: pointer" data-category-id="1" onClick="submitCategory(this)">
-                    <img class="card-img" src="{% static 'images/NES.jpg' %}" alt="Title" />
-                    <div class="card-img-overlay">
-                        <h4 class="card-title">NES</h4>
+            <div class="top-categories-container d-flex gap-2">    
+                    <div class="card top-categories-card bg-dark text-white">
+                        <img class="card-img" src="{% static 'images/NES.jpg' %}" alt="Title" />
+                        <div class="card-img-overlay">
+                            <h4 class="card-title">NES</h4>
+                            <a href="{% url 'categories' %}?categoryId=1" class="stretched-link"></a>
+                        </div>
                     </div>
-                </div>
-                <div class="card top-categories-card bg-dark text-white" style="cursor: pointer" data-category-id="2" onClick="submitCategory(this)">
+                </a>
+                <div class="card top-categories-card bg-dark text-white">
                     <img class="card-img" src="{% static 'images/SNES.jpg' %}"  alt="Title" />
                     <div class="card-img-overlay">
                         <h4 class="card-title">SNES</h4>
+                        <a href="{% url 'categories' %}?categoryId=1" class="stretched-link"></a>
                     </div>
                 </div>
-                <div class="card top-categories-card bg-dark text-white" style="cursor: pointer" data-category-id="3" onClick="submitCategory(this)">
+                <div class="card top-categories-card bg-dark text-white">
                     <img class="card-img" src="{% static 'images/PS1.jpg' %}" alt="Title" />
                     <div class="card-img-overlay">
                         <h4 class="card-title">Playstation 1</h4>
+                        <a href="{% url 'categories' %}?categoryId=1" class="stretched-link"></a>
                     </div>
                 </div>
                 <div class="card top-categories-card bg-white text-darl">
@@ -67,7 +69,6 @@ Index
                         <h5 class="card-title">And many more</h5>
                     </div>
                 </div>
-            </form>
             </div>
         </div>
     </div>

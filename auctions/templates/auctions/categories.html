@@ -53,11 +53,8 @@ Select Category
                 </div>
             </div>
         </div>
-        <form method="POST" action="{% url 'categories' %}" class="container" style="max-width: 600px;">
-            {% csrf_token %}
-            <div class="form-group mt-2">
-                <input id="selectedCategoryForm" type="number" name="category" hidden required>
-            </div>
+        <form method="GET" action="{% url 'categories' %}" class="container mt-3" style="max-width: 600px;">
+            <input id="selectedCategoryForm" type="hidden" name="categoryId">
             <input class="btn btn-primary w-100" type="submit" value="Search this category" aria-label="Search button">
         </form>
     </div>
