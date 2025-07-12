@@ -59,22 +59,31 @@ class Listing(models.Model):
     image_url = models.URLField(null=True, blank=True)
     has_bids = models.BooleanField(default=False)
     
-    def clean(self):
-        #update has_bids based on whether bids exist
-        if Bid.objects.filter(listing=self).exists():
-            self.has_bids = True
-        else:
-            self.has_bids = False
-        #Update winner when listing is closed
-        if self.is_active == False:
-            self.winner = self.highest_bidder
-        else:
-            self.winner = None
-
     def save(self, *args, **kwargs):
-        #validate before saving
-        self.full_clean()
+        #checks if this is a new listing, for creation / update logic
+        is_new = self.pk is None
+        
+        # Save first to get primary key if new
         super().save(*args, **kwargs)
+
+        updated_fields = {}
+
+        if not is_new:
+            # Only check bids if it's an update
+            has_bids_now = Bid.objects.filter(listing=self).exists()
+            if self.has_bids != has_bids_now:
+                updated_fields['has_bids'] = has_bids_now
+
+            #Always update winner when listing is closed
+            winner_now = self.highest_bidder if not self.is_active else None
+            if self.winner != winner_now:
+                updated_fields['winner'] = winner_now
+
+            #Apply changes if updated_fields is not empty
+            if updated_fields:
+                for attr, value in updated_fields.items():
+                    setattr(self, attr, value)
+                Listing.objects.filter(pk=self.pk).update(**updated_fields)
 
     def __str__(self):
         return f"{self.title}"

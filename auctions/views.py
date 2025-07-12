@@ -9,18 +9,49 @@ from django.urls import reverse
 from .models import User, Category, Listing, Bid, Comment, Favorite
 from .forms import ListingForm
 
+
+def get_child_categories(request):
+    parent_id = request.GET.get("parent_id")
+    if not parent_id:
+        return JsonResponse({"error": "No parent_id provided"}, status=400)
+    try:
+        parent_category = Category.objects.get(pk=parent_id)
+        child_categories = parent_category.children.all()
+        data = [{"id": cat.id, "name": cat.name, "parentId": parent_id, "has_children": cat.has_children()} for cat in child_categories]
+        return JsonResponse({"child_categories": data}, status=200)
+    except Category.DoesNotExist:
+        return JsonResponse({"error": "Parent category not found."}, status=404)
+
+def get_category_breadcrumb(request):
+    category_id = request.GET.get('category_id')
+    if not category_id:
+        return JsonResponse({"breadcrumb": []})
+    try:
+        category = Category.objects.get(pk=category_id)
+        breadcrumb = []
+        while category:
+            breadcrumb.insert(0, {"id": category.id, "name": category.name})
+            category = category.parent
+        return JsonResponse({"breadcrumb": breadcrumb})
+    except Category.DoesNotExist:
+        print('category does not exist')
+        return JsonResponse({"breadcrumb": []})
+
+
 def get_favorited_listing_ids(request):
-    ids = set(Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True))
-    return ids
-
-def index(request):
-    active_listings = Listing.objects.filter(is_active=True)
-
     if request.user.is_authenticated:
-        favorited_listing_ids = get_favorited_listing_ids(request)
+        favorited_listing_ids = set(Favorite.objects.filter(user=request.user).values_list('listing_id', flat=True))
     else:
         favorited_listing_ids = set()
-    
+    return favorited_listing_ids
+
+def index(request):
+    # Initialize contexts before rendering
+    active_listings = Listing.objects.filter(is_active=True)
+    favorited_listing_ids = get_favorited_listing_ids(request)
+
+    #TODO: create a function/algorithm to determine the top categories and pass to template. currently hardcoded.
+
     return render(request, "auctions/index.html", {
         "active_listings" : active_listings,
         "favorited_listing_ids": favorited_listing_ids
@@ -85,11 +116,31 @@ def register(request):
 
 @login_required
 def create_listing(request):
+    root_categories = Category.objects.filter(parent__isnull=True)
+
     if request.method == "POST":
         form = ListingForm(request.POST)
+        
+        #manually attach the category before validating the form
+        category_id = request.POST.get("category")
+        print(f'category Id is {category_id}')
+        
+        if not category_id:
+            print('Category is NOT provided')
+            form.add_error('category', "Please input category.")
+        else:
+            try:
+                category_instance = Category.objects.get(pk=category_id)
+                form.instance.category = category_instance
+                print(f'form.instance.category is {form.instance.category}')
+            except Category.DoesNotExist:
+                form.add_error('category', "Selected category does not exist.")
+
         if form.is_valid():
             try:
+                print('form is valid')
                 new_listing = form.save(commit=False)
+                print(new_listing)
                 new_listing.seller = request.user
                 new_listing.save()
                 messages.success(request, "Listing added successfully!")
@@ -97,28 +148,32 @@ def create_listing(request):
             except(ValueError, TypeError):
                 messages.error(request, "Something went wrong when saving. Please try again.")
         else:
+            print('form is NOT valid')
             form.add_is_invalid_class()
             messages.error(request, "Please correct the errors below.")
-            return render(request, "auctions/create.html", {
-                "form": form
-            })
 
-    form = ListingForm()
+    else:
+        form = ListingForm()
+
     return render(request, "auctions/create.html", {
-        "form": form
+        "form": form,
+        "root_categories": root_categories
     })
 
 def categories(request):
     category_id = request.GET.get('categoryId')
+    
+    # Initialize contexts for template
+    favorited_listing_ids = get_favorited_listing_ids(request)
+    root_categories= Category.objects.filter(parent__isnull=True)
 
     #initialize listings and category
-    root_categories= Category.objects.filter(parent__isnull=True)
     listings = []
     category = []
 
     if not category_id: #GET with empty query parameter
         return render(request, "auctions/categories.html", {
-        "root_categories": root_categories,
+        "root_categories": root_categories
         })
     
     try:
@@ -132,20 +187,9 @@ def categories(request):
     return render(request, "auctions/categories.html", {
         "root_categories": root_categories,
         "listings": listings,
-        "category": category
+        "category": category,
+        "favorited_listing_ids": favorited_listing_ids
     })
-
-def get_child_categories(request):
-    parent_id = request.GET.get("parent_id")
-    if not parent_id:
-        return JsonResponse({"error": "No parent_id provided"}, status=400)
-    try:
-        parent_category = Category.objects.get(id=parent_id)
-        child_categories = parent_category.children.all()
-        data = [{"id": cat.id, "name": cat.name, "parentId": parent_id, "has_children": cat.has_children()} for cat in child_categories]
-        return JsonResponse({"child_categories": data}, status=200)
-    except Category.DoesNotExist:
-        return JsonResponse({"error": "Parent category not found."}, status=404)
 
 def listing(request, id):
     listing = Listing.objects.get(id=id)
@@ -160,9 +204,11 @@ def listing(request, id):
 
 @login_required
 def watchlist_view(request):
+    favorited_listing_ids = get_favorited_listing_ids(request)
     watchlist = Listing.objects.filter(favorites__user=request.user)
     return render(request, "auctions/watchlist.html", {
-        "watchlist": watchlist
+        "watchlist": watchlist,
+        "favorited_listing_ids": favorited_listing_ids
     })
 
 # A view to handle ajax request to toggle favorited status of a listing
@@ -187,5 +233,4 @@ def favorite_listing(request, id):
             "favorites_count": favorites_count,
             "message": message
         })
-    
     return JsonResponse({"error": "Invalid response. GET instead of POST."}, status=400)
