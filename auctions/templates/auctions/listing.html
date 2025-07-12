@@ -1,23 +1,26 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    {% if messages %}
-        <div class="messages">
+
+<div class="d-flex flex-row min-vh-100 h-100 w-100 justify-content-between">
+        {% if messages %}
+        <div class="messages position-fixed mt-3 start-50 translate-middle-x" style="z-index: 1500;">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert" role="alert">
-                {{ message }}
-                <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert" role="alert">
+                    {{ message }}
+                    <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
         </div>
-    {% endif %}
-    
-    <div class="">
-        <h4>{{ title }}</h4>
-        <div style="display: flex; border: 1px black solid; border-radius: 8px; margin: 20px; padding: 8px; gap: 8px;">
-            <img src="{{ image_url }}" style="max-width: 300px; max-height: 500px; width: auto; height: auto; object-fit: contain;" alt="cover image for {{ title }}">
-            <p>{{ description }}</p>    
+        {% endif %}
+
+        <div class="side-animated-border border-right-light"></div>
+        <div class="container-sm pt-5">
+            
+            <h2>{{ title }}</h2>
+            {{ description }}
+            {{ image_url }}
         </div>
-    </div>
-    
+        <div class="side-animated-border border-left-light"></div>
+</div>
 {% endblock %}
