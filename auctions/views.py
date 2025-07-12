@@ -193,13 +193,10 @@ def categories(request):
 
 def listing(request, id):
     listing = Listing.objects.get(id=id)
+    favorited_listing_ids = get_favorited_listing_ids(request)
     return render(request, "auctions/listing.html", {
-        "title" : listing.title,
-        "description" : listing.description,
-        "image_url" : listing.image_url,
-        "starting_bid": listing.starting_bid,
-        "highest_bid": listing.highest_bid,
-        "highest_bidder": listing.highest_bidder
+        "listing": listing,
+        "favorited_listing_ids": favorited_listing_ids
     })
 
 @login_required
