@@ -2,7 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const favoriteButton = document.querySelector(".btn-favorite")
     const favoriteButtonText = document.getElementById("favorite-button-text")
     const messagesContainer = document.getElementById("messages-container")
+    const favoritesCount = document.querySelector(".favorites-count")
+
     if (!favoriteButton) return;
+    
     favoriteButton.addEventListener("click", () => {
         const url = favoriteButton.dataset.url
         const csrf = favoriteButton.dataset.csrf
@@ -20,8 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.favorited !== undefined) {
                 isFavorited = data.favorited;
                 favoriteButton.classList.toggle("favorited", data.favorited)
-                favoriteButtonText.innerHTML = isFavorited ? "Remove from watchlist" : "Add to watchlist"
-
+                favoriteButtonText.innerHTML = isFavorited ? 
+                "Remove from watchlist" : "Add to watchlist"
+                
+                if (favoritesCount && data.favorites_count !== undefined) {
+                    favoritesCount.innerHTML = data.favorites_count
+                }
+                
                 if (data.message) {
                     const existingAlert = messagesContainer.querySelector(".alert")
                     if (existingAlert) {
