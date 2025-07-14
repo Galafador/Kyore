@@ -1,15 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User, Category, Listing, Bid, Comment, Favorite
-from .forms import ListingForm
+from .forms import ListingForm, BidForm
 
 
+########### HELPER & AJAX FUNCTIONS ###########
 def get_child_categories(request):
     parent_id = request.GET.get("parent_id")
     if not parent_id:
@@ -21,6 +23,7 @@ def get_child_categories(request):
         return JsonResponse({"child_categories": data}, status=200)
     except Category.DoesNotExist:
         return JsonResponse({"error": "Parent category not found."}, status=404)
+
 
 def get_category_breadcrumb(request):
     category_id = request.GET.get('category_id')
@@ -45,6 +48,32 @@ def get_favorited_listing_ids(request):
         favorited_listing_ids = set()
     return favorited_listing_ids
 
+
+@login_required
+def favorite_listing(request, id):
+    if request.method == "POST":
+        listing = Listing.objects.get(id=id)
+        favorite, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
+        if not created:
+            #already favorited, will remove from favorite
+            favorite.delete()
+            favorited = False
+            message = "Removed from watchlist."
+        else:
+            favorited = True
+            message = "Added to watchlist."
+
+        favorites_count = Favorite.objects.filter(listing=listing).count()
+
+        return JsonResponse({
+            "favorited": favorited,
+            "favorites_count": favorites_count,
+            "message": message
+        })
+    return JsonResponse({"error": "Invalid response. GET instead of POST."}, status=400)
+
+
+########### VIEWS #############
 def index(request):
     # Initialize contexts before rendering
     active_listings = Listing.objects.filter(is_active=True)
@@ -114,6 +143,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 @login_required
 def create_listing(request):
     root_categories = Category.objects.filter(parent__isnull=True)
@@ -160,6 +190,7 @@ def create_listing(request):
         "root_categories": root_categories
     })
 
+
 def categories(request):
     category_id = request.GET.get('categoryId')
     
@@ -191,13 +222,29 @@ def categories(request):
         "favorited_listing_ids": favorited_listing_ids
     })
 
+
 def listing(request, id):
     listing = Listing.objects.get(id=id)
+
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        form.instance.bidder = request.user
+        form.instance.listing = listing
+
+        if form.is_valid():
+            form.save()
+            return redirect('listing', id=listing.id)
+    else:
+        form = BidForm()
+
     favorited_listing_ids = get_favorited_listing_ids(request)
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "favorited_listing_ids": favorited_listing_ids
+        "favorited_listing_ids": favorited_listing_ids,
+        "form": form
     })
+
 
 @login_required
 def watchlist_view(request):
@@ -207,27 +254,3 @@ def watchlist_view(request):
         "watchlist": watchlist,
         "favorited_listing_ids": favorited_listing_ids
     })
-
-# A view to handle ajax request to toggle favorited status of a listing
-@login_required
-def favorite_listing(request, id):
-    if request.method == "POST":
-        listing = Listing.objects.get(id=id)
-        favorite, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
-        if not created:
-            #already favorited, will remove from favorite
-            favorite.delete()
-            favorited = False
-            message = "Removed from watchlist."
-        else:
-            favorited = True
-            message = "Added to watchlist."
-
-        favorites_count = Favorite.objects.filter(listing=listing).count()
-
-        return JsonResponse({
-            "favorited": favorited,
-            "favorites_count": favorites_count,
-            "message": message
-        })
-    return JsonResponse({"error": "Invalid response. GET instead of POST."}, status=400)

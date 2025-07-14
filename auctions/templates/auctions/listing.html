@@ -77,11 +77,18 @@
                         <p class="fw-normal mb-1 w-100">Current Bid ({{listing.bids.count}} bids)</p>
                         <h1 class="fw-bold mb-4 w-100">${% if listing.has_bids %}{{ listing.highest_bid }}{% else %}{{ listing.starting_bid }}{% endif %}</h1>
                     </div>
-                    <form class="mb-3" action="" method="post">
+                    <form class="mb-3" action="{% url 'listing' id=listing.id %}" method="post">
                     {% csrf_token %}
                         <div class="d-flex mb-3 gap-2">
                             <span class="d-flex align-items-center fw-semibold py-2 px-2">USD</span>
-                            <input type="number" class="form-control form-control-kyore py-4" style="font-weight: 600;" name="" id="">
+                            <div class="form-group form-group-kyore">
+                                {{ form.amount }}
+                                {% for error in form.amount.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
                         </div>
                         {% for error in form.title.errors %}
                         <div class="invalid-feedback">

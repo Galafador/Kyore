@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Listing
+from .models import Listing, Bid
 
 class ListingForm(ModelForm):
     class Meta:
@@ -36,3 +36,13 @@ class ListingForm(ModelForm):
                 existing = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing} is-invalid".strip()
 
+class BidForm(ModelForm):
+    class Meta:
+        model = Bid
+        fields = ["amount"]
+        widgets = {
+                    "amount": forms.NumberInput(attrs={
+                        "placeholder": "Enter your bid amount...",
+                        "class":  "form-control form-control-kyore py-3"
+                    }),
+        }
