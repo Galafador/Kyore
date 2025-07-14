@@ -234,6 +234,8 @@ def listing(request, id):
         if form.is_valid():
             form.save()
             return redirect('listing', id=listing.id)
+        else:
+            form.add_is_invalid_class()
     else:
         form = BidForm()
 

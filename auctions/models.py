@@ -90,7 +90,7 @@ class Listing(models.Model):
     
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     is_first_bid = models.BooleanField(default=False)
     bidder = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="bids", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,12 +99,12 @@ class Bid(models.Model):
         #validate if listing is still open
         if not self.listing.is_active:
             raise ValidationError({
-                'listing': 'Cannot bid on an inactive listing'
+                'amount': 'Cannot bid on an inactive listing'
             })
         #Validate amount must at least be the same as the starting bid
         if self.amount < self.listing.starting_bid:
             raise ValidationError({
-                'amount': 'Bid amount must be higher than the starting bid.'
+                'amount': 'Bid amount must be at least equal to the starting bid.'
             })
         #Validate amount must be at least higher than the highest_bid, check if highest_bid exist first
         if self.listing.highest_bid is not None and self.amount <= self.listing.highest_bid:

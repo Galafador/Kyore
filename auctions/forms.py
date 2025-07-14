@@ -36,6 +36,7 @@ class ListingForm(ModelForm):
                 existing = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing} is-invalid".strip()
 
+
 class BidForm(ModelForm):
     class Meta:
         model = Bid
@@ -43,6 +44,12 @@ class BidForm(ModelForm):
         widgets = {
                     "amount": forms.NumberInput(attrs={
                         "placeholder": "Enter your bid amount...",
-                        "class":  "form-control form-control-kyore py-3"
+                        "class":  "form-control form-control-kyore py-4"
                     }),
         }
+
+    def add_is_invalid_class(self):
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                existing = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing} is-invalid".strip()
