@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="{% static 'css/styles_CommentCard.css' %}">
 {% endblock %}
 
+{% block title %}
+{{ listing.title }}
+{% endblock %}
+
 
 {% block body %}
 
@@ -26,33 +30,47 @@
         </div>
 
         <div class="side-animated-border border-right-light"></div>
+
         <div class="container pt-5 px-0" style="background-color: rgba(172, 255, 47, 0);">
-            <div class="d-flex flex-column gap-1 mb-4 user-select-none">
-                {% if listing.winner == request.user %}
-                <div class="d-flex flex-column bg-dark text-white p-3 mx-3 align-items-center rounded" style="border: 1px solid var(--color-outline-light)">
-                    <h5 class="p-0 mb-3 fw-bold">Congratulations!</h5>
-                    <h6 class="p-0 m-0">you won this listing.</h6>
+            <div class="d-flex flex-column gap-1 mb-5 user-select-none">
+                {% if listing.seller == request.user %}
+                <div class="d-flex flex-column p-2 mx-3 align-items-center bg-secondary text-white rounded">
+                    <h6 class="p-0 my-2">This is your listing</h6>
                 </div>
                 {% endif %}
-                {% if listing.is_active == False %}
-                <div class="d-flex flex-column p-2 mx-3 align-items-center rounded" style="border: 1px solid var(--color-outline-light)">
+                {% if listing.winner == request.user %}
+                <div class="d-flex flex-column bg-dark text-white p-3 mx-3 align-items-center rounded">
+                    <h5 class="p-0 mb-3 fw-bold">Congratulations!</h5>
+                    <h6 class="p-0 m-0">you won this listing</h6>
+                </div>
+                {% endif %}
+                {% if listing.is_active == False and listing.winner != request.user %}
+                <div class="d-flex flex-column p-2 mx-3 align-items-center bg-danger text-white rounded">
                     <h6 class="p-0 my-2">This listing has been closed</h6>
                 </div>
                 {% endif %}
             </div>
 
+            {% if breadcrumb %}
             <div class="breadcrumb mx-3">
+                <span class="me-2 fw-bold text-black">Auctions</span>
+                    <span class="me-2">
+                        <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </span>
                 {% for cat in breadcrumb %}
                     <a class="me-2 fw-bold text-black" href="{% url 'categories'%}?categoryId={{cat.id}}">{{ cat.name }}</a>
                     {% if not forloop.last %}
                     <span class="me-2">
-                        <svg style="width: 1rem; height: 1rem; margin-inline: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </span>
                     {% endif %}
                 {% endfor %}
             </div>
+            {% endif %}
 
             <div class="row g-3 mx-auto mb-5" style="max-width: 1400px; background-color: rgba(223, 226, 43, 0);">
                 <div class="col-12 col-lg-6 d-flex flex-column py-3 px-3 mx-auto" style="max-width: 640px; background-color: rgba(38, 0, 128, 0);">
@@ -67,7 +85,7 @@
                     <div class="d-flex gap-1 gap-md-3 w-100 align-items-center mb-3" style="background-color: rgba(255, 0, 0, 0);">
                         <div class="profile-image" style="background-color: rgba(0, 0, 255, 0);">
                             <img
-                                src="https://placehold.co/50x50"
+                                src="{% if listing.seller.image_url %}{{ listing.seller.image_url }}{% else %}{% static 'images/default_dp.webp'  %}{% endif %}"
                                 class=""
                                 alt=""
                                 width="50px"
@@ -95,12 +113,11 @@
                         </div>
                         </div>
                     </div>
-                    <div class="d-flex w-100 p-0 m-0 justify-content-center rounded" style="aspect-ratio: 1; background-color: rgb(196, 196, 196);">
+                    <div class="d-flex w-100 p-0 m-0 justify-content-center rounded overflow-hidden" style="aspect-ratio: 1; background-color: rgb(196, 196, 196);">
                         <img
-                            src="{{ listing.image_url }}"
-                            class="img-fluid h-100"
+                            src="{% if listing.image_url %}{{ listing.image_url }}{% else %}{% static 'images/default_listing_picture.webp' %}{% endif %}"
+                            class="img-fluid"
                             alt="Image for {{ title }}"
-                        
                             style="object-fit: contain; background-color: rgba(21, 255, 0, 0);"
                             />
                     </div>
@@ -153,14 +170,14 @@
                 </div>
             </div>
 
-            
+            <hr>
 
-            <div class="comment-card mx-auto mx-lg-0 mt-5 mb-4">
+            <div class="comment-card mx-auto mt-5 mb-4">
                 <form class="comment-input-group" action="{% url 'listing' id=listing.id %}" method="post">
                     <div class="d-flex align-items-start mb-2">
                         {% csrf_token %}
                         <div class="profile-pic-container me-1">
-                            <img src="https://placehold.co/50x50/" alt="Profile Picture" class="profile-pic">
+                            <img src="{% if request.user.image_url %}{{ request.user.image_url }}{% else %}{% static 'images/default_dp.webp'  %}{% endif %}" alt="Profile Picture" class="profile-pic">
                         </div>
                         {{ comment_form.comment }}
                     </div>
@@ -176,12 +193,12 @@
                     </div>
                 </form>
             </div>
+            <div class="d-flex flex-column mx-auto" style="max-width: 600px; min-height:500px; padding-bottom: 100px; background-color: rgba(255, 0, 0, 0);">
             {% if comments %}
-            <div class="d-flex flex-column mx-auto mx-lg-0 mb-5" style="max-width: 600px; background-color: rgba(255, 0, 0, 0);">
                 {% for comment in comments %}
                 <div class="d-flex w-100 mb-3 px-3" style="max-width: 600px; background-color: rgba(0, 128, 0, 0);">
                     <div class="profile-pic-container me-3" style="margin-top: 0.25rem;">
-                        <img src="https://placehold.co/50x50/" alt="Profile Picture" class="profile-pic">
+                        <img src="{% if comment.commenter.image_url %}{{ comment.commenter.image_url }}{% else %}{% static 'images/default_dp.webp'  %}{% endif %}" alt="Profile Picture" class="profile-pic">
                     </div>
                     <div>
                         <h6 class="mb-1 p-0">{{ comment.commenter }}</h6>
@@ -189,8 +206,10 @@
                     </div>
                 </div>
                 {% endfor %}
-            </div>
+            {% else %}
+                <h6 class="px-3">No one commented just yet...</h6>
             {% endif %}
+            </div>
         </div>
 
         <div class="side-animated-border border-left-light"></div>

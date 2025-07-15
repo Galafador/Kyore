@@ -45,7 +45,7 @@ Index
                         <img class="card-img" src="{% static 'images/NES.jpg' %}" alt="Title" />
                         <div class="card-img-overlay">
                             <h4 class="card-title">NES</h4>
-                            <a href="{% url 'categories' %}?categoryId=16" class="stretched-link"></a>
+                            <a href="{% url 'categories' %}?categoryId=17" class="stretched-link"></a>
                         </div>
                     </div>
                 </a>
@@ -115,9 +115,9 @@ Index
                 </button>
                 {% endif %}
                 {% if listing.is_active %}
-                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
+                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}{% static 'images/default_listing_picture.webp' %}{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
                 {% else %}
-                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}https://placehold.co/600x600{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209); filter: grayscale(0%)" />
+                <img class="card-img-top" src="{% if listing.image_url %}{{listing.image_url}}{% else %}{% static 'images/default_listing_picture.webp' %}{% endif %}" alt="Listing image for {{ listing.title }}" width="300" height="300" style="object-fit:contain; background-color: rgb(209, 209, 209);" />
                 <div class="position-absolute top-0 left-0 d-flex text-white align-items-center justify-content-center rounded" style="pointer-events: none; z-index: 9; width: 298px; height: 300px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px);">
                     <div class="d-flex flex-column w-100 bg-dark">
                         <p style="align-self: center; margin: 0; padding: 1rem;">This listing has ended</p>

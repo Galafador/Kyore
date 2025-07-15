@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     watchlist = models.ManyToManyField("Listing", related_name="watchlisted_by", blank=True)
     image_url = models.URLField(null=True, blank=True)
     def __str__(self):
@@ -45,7 +44,7 @@ class Category(models.Model):
 
 
 class Listing(models.Model):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     seller = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="listings", null=True)

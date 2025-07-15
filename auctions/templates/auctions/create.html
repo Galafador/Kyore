@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Create new listing
+New Listing
 {% endblock %}
 
 {% block additional_css %}
@@ -80,20 +80,6 @@ Create new listing
                 {% endfor %}
             </div>
 
-            <!-- automatically looping through forms (less control)
-                {% for field in form %}
-                <div class="form-group form-group-kyore mb-3">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% for error in field.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-            -->
-            <!-- Category selector -->
             <p class="pt-1 pb-0 mb-2">Category:</p>
             <div class="category-selector-container mb-3 {% if form.category.errors %}category-invalid{% endif %}" style="max-width: 100%; margin-top: 0px; padding-top: 0px;">
                 <div id="dropdownHeader" class="dropdown-header closed">
