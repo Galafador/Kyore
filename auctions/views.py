@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -25,20 +24,23 @@ def get_child_categories(request):
         return JsonResponse({"error": "Parent category not found."}, status=404)
 
 
-def get_category_breadcrumb(request):
-    category_id = request.GET.get('category_id')
-    if not category_id:
-        return JsonResponse({"breadcrumb": []})
+def get_category_breadcrumb_data(category_id):
     try:
         category = Category.objects.get(pk=category_id)
         breadcrumb = []
         while category:
             breadcrumb.insert(0, {"id": category.id, "name": category.name})
             category = category.parent
-        return JsonResponse({"breadcrumb": breadcrumb})
+        return breadcrumb
     except Category.DoesNotExist:
-        print('category does not exist')
-        return JsonResponse({"breadcrumb": []})
+        print("category does not exist")
+        return []
+
+
+def get_category_breadcrumb_json(request):
+    category_id = request.GET.get('category_id')
+    breadcrumb = get_category_breadcrumb_data(category_id)
+    return JsonResponse({"breadcrumb": breadcrumb})
 
 
 def get_favorited_listing_ids(request):
@@ -98,7 +100,7 @@ def login_view(request):
             login(request, user)
             #redirect to 'next' in query parameter if exists, else go to index
             next_url = request.POST.get('next') or reverse("index")
-            return HttpResponseRedirect(next_url)
+            return redirect(next_url)
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -112,7 +114,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return redirect("index")
 
 
 def register(request):
@@ -139,7 +141,7 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return redirect("index")
     else:
         return render(request, "auctions/register.html")
 
@@ -153,7 +155,6 @@ def create_listing(request):
         
         #manually attach the category before validating the form
         category_id = request.POST.get("category")
-        print(f'category Id is {category_id}')
         
         if not category_id:
             print('Category is NOT provided')
@@ -162,19 +163,17 @@ def create_listing(request):
             try:
                 category_instance = Category.objects.get(pk=category_id)
                 form.instance.category = category_instance
-                print(f'form.instance.category is {form.instance.category}')
             except Category.DoesNotExist:
                 form.add_error('category', "Selected category does not exist.")
 
         if form.is_valid():
             try:
-                print('form is valid')
                 new_listing = form.save(commit=False)
                 print(new_listing)
                 new_listing.seller = request.user
                 new_listing.save()
                 messages.success(request, "Listing added successfully!")
-                return HttpResponseRedirect(reverse("listing", args=[new_listing.id]))
+                return redirect("listing", id=new_listing.id)
             except(ValueError, TypeError):
                 messages.error(request, "Something went wrong when saving. Please try again.")
         else:
@@ -213,7 +212,7 @@ def categories(request):
         listings = Listing.objects.filter(category_id__in=descendant_category_ids)
         if not listings.exists():
             messages.error(request, "No listings found in this category")
-    except (UnboundLocalError, Category.DoesNotExist, ValueError, TypeError):
+    except (Category.DoesNotExist, ValueError, TypeError):
         messages.error(request, "Invalid category selected.")
     return render(request, "auctions/categories.html", {
         "root_categories": root_categories,
@@ -225,11 +224,16 @@ def categories(request):
 
 def listing(request, id):
     listing = Listing.objects.get(id=id)
-    comments = listing.comments.order_by('-created_at')
+    listing_category = listing.category
+    comments = listing.comments.order_by('-updated_at', '-created_at')
     favorited_listing_ids = get_favorited_listing_ids(request)
-
+    try:
+        breadcrumb = get_category_breadcrumb_data(listing_category.id)
+    except (TypeError, AttributeError):
+        breadcrumb = []
+    
     if request.method == "POST":
-        if confirm_bid in request.POST:
+        if "submit_bid" in request.POST:
             bid_form = BidForm(request.POST)
             comment_form = CommentForm()
             bid_form.instance.bidder = request.user
@@ -240,7 +244,7 @@ def listing(request, id):
             else:
                 bid_form.add_is_invalid_class()
 
-        elif confirm_comment in request.POST:
+        elif "submit_comment" in request.POST:
             bid_form = BidForm()
             comment_form = CommentForm(request.POST)
             comment_form.instance.commenter = request.user
@@ -250,6 +254,33 @@ def listing(request, id):
                 return redirect('listing', id=listing.id)
             else:
                 comment_form.add_is_invalid_class()
+
+        elif "close_listing" in request.POST:
+            bid_form = BidForm()
+            comment_form = CommentForm()
+            #check if its the seller that calls the function
+            if listing.seller == request.user:
+                listing.is_active = False
+                listing.save()
+                messages.success(request, "Listing closed!")
+                return redirect('listing', id=id)
+            else:
+                messages.error(request, '403: Forbidden')
+                return redirect('listing', id=id)
+            
+        elif "reopen_listing" in request.POST:
+            bid_form = BidForm()
+            comment_form = CommentForm()
+            #check if its the seller that calls the function
+            if listing.seller == request.user:
+                listing.is_active = True
+                listing.save()
+                messages.success(request, "Listing re-opened!")
+                return redirect('listing', id=id)
+            else:
+                messages.error(request, '403: Forbidden')
+                return redirect('listing', id=id)
+
     else:
         bid_form = BidForm()
         comment_form = CommentForm()
@@ -260,7 +291,8 @@ def listing(request, id):
         "favorited_listing_ids": favorited_listing_ids,
         "bid_form": bid_form,
         "comment_form": comment_form,
-        "comments": comments
+        "comments": comments,
+        "breadcrumb": breadcrumb
     })
 
 
@@ -272,3 +304,6 @@ def watchlist_view(request):
         "watchlist": watchlist,
         "favorited_listing_ids": favorited_listing_ids
     })
+
+
+#TODO: a view to customize user account, change avatar, update templates to replace placeholder avatars with actual avatars.

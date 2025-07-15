@@ -1,51 +1,50 @@
         .comment-card {
-            background-color: #ffffff; /* White background for the card */
-            max-width: 600px; /* Max width for the form */
-            width: 100%; /* Make it responsive */
-            padding: 25px; /* Inner padding for the card */
+            background-color: var(--color-backdrop);
+            max-width: 600px;
+            width: 100%;
+            padding: 1rem;
         }
         .comment-input-group {
-            /* This div now acts as the visual "textarea" with its own border and shadow */
-            border-radius: 2rem; /* Rounded corners for the entire input group */
-            border: 1px solid #ced4da; /* Light grey border */
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
-            background-color: #ffffff; /* White background for the group */
-            padding: 15px; /* Padding inside the group */
+            border-radius: 2rem;
+            border: 1px solid var(--color-outline-light);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); 
+            background-color: var(--color-backdrop);
+            padding: 1rem;
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
         .comment-input-group:focus-within {
-            border-color: var(--color-outline-brand); /* Blue border on focus */
-            box-shadow: 0 0 0 0.25rem var(--color-shadow-brand); /* Bootstrap-like focus glow */
+            border-color: var(--color-outline-brand);
+            box-shadow: 0 0 0 0.25rem var(--color-shadow-brand);
         }
         .profile-pic-container {
-            width: 42px; /* Slightly smaller profile picture container */
+            width: 42px;
             height: 42px;
-            border-radius: 50%; /* Make the border circular */
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Ensures the image stays within the circular boundary */
-            flex-shrink: 0; /* Prevent shrinking when content is wide */
+            overflow: hidden;
+            flex-shrink: 0;
         }
         .profile-pic {
-            width: 42px; /* Actual image size, slightly smaller than container */
+            width: 42px;
             height: 42px;
-            border-radius: 50%; /* Make the image itself circular */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
+            border-radius: 50%;
+            object-fit: cover;
         }
         .comment-textarea {
-            border: none; /* Remove its own border */
-            box-shadow: none !important; /* Remove its own shadow */
-            padding: 8px 10px; /* Adjust padding for better fit within the group */
-            resize: vertical; /* Allow vertical resizing only */
-            min-height: 60px; /* Minimum height for the textarea */
-            background-color: transparent; /* Important for the group's background to show */
+            border: none;
+            box-shadow: none !important;
+            padding: 8px 10px;
+            resize: none;
+            overflow: hidden;
+            min-height: 60px;
+            background-color: transparent;
         }
         .comment-textarea:focus {
-            outline: none; /* Remove default outline */
+            outline: none; 
         }
         
-        /* Responsive adjustments */
         @media (max-width: 576px) {
             .comment-card {
                 padding: 15px;

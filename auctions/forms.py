@@ -60,7 +60,9 @@ class CommentForm(ModelForm):
         widgets = {
                     "comment": forms.Textarea(attrs={
                         "placeholder": "Add a comment...",
-                        "class":  "form-control comment-textarea flex-grow-1"
+                        "class":  "form-control comment-textarea flex-grow-1",
+                        "rows": 3
+
                     }),
         }
         def add_is_invalid_class(self):

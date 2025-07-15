@@ -99,10 +99,10 @@ class Bid(models.Model):
         #validate if listing is still open
         if not self.listing.is_active:
             raise ValidationError({
-                'amount': 'Cannot bid on an inactive listing'
+                'amount': 'This listing is already closed.'
             })
         #Validate amount must at least be the same as the starting bid
-        if self.amount < self.listing.starting_bid:
+        if not self.listing.has_bids and self.amount < self.listing.starting_bid:
             raise ValidationError({
                 'amount': 'Bid amount must be at least equal to the starting bid.'
             })
@@ -133,7 +133,7 @@ class Bid(models.Model):
 class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="comments", null=True)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
-    comment = models.CharField(max_length=256, null=True)
+    comment = models.CharField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
