@@ -2,6 +2,11 @@
 {% load static %}
 {% load number_filters %}
 
+{% block additional_css %}
+<link rel="stylesheet" href="{% static 'css/styles_CommentCard.css' %}">
+{% endblock %}
+
+
 {% block body %}
 
 <div class="d-flex flex-row min-vh-100 h-100 w-100 justify-content-between">
@@ -21,7 +26,7 @@
 
         <div class="side-animated-border border-right-light"></div>
         <div class="container pt-5 px-0" style="background-color: rgba(172, 255, 47, 0);">
-            <div class="row g-3 mx-auto" style="max-width: 1400px; background-color: rgba(223, 226, 43, 0);">
+            <div class="row g-3 mx-auto mb-4" style="max-width: 1400px; background-color: rgba(223, 226, 43, 0);">
                 <div class="col-12 col-lg-6 d-flex flex-column py-3 px-3 mx-auto" style="max-width: 640px; background-color: rgba(38, 0, 128, 0);">
                     <h2 class="mb-4 text-truncate-4" style="font-weight: 600;">
                         <span>
@@ -112,7 +117,30 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="comment-card mx-auto mb-4">
+                <div class="comment-input-group">
+                    <div class="d-flex align-items-start mb-2">
+                        <!-- Profile Picture Section -->
+                        <div class="profile-pic-container me-3">
+                            <img src="https://placehold.co/50x50/007bff/ffffff?text=P" alt="Profile Picture" class="profile-pic">
+                        </div>
+                    
+                        <!-- Comment Input Area -->
+                        <textarea class="form-control comment-textarea flex-grow-1" placeholder="Write a comment..." rows="3"></textarea>
+                    </div>
+                
+                    <!-- Submit Button Section -->
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary">Post Comment</button>
+                    </div>
+                </div>
+            </div>
+            {% if comments %}
+            <div class="d-flex flex-column">
+                {% for comment in comments %}
+                <h6>{{ comment.commenter }}</h6>
+                <p>{{ comment.comment }}</p>
+            </div>
         </div>
         <div class="side-animated-border border-left-light"></div>
 </div>

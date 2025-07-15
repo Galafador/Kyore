@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User, Category, Listing, Bid, Comment, Favorite
-from .forms import ListingForm, BidForm
+from .forms import ListingForm, BidForm, CommentForm
 
 
 ########### HELPER & AJAX FUNCTIONS ###########
@@ -225,26 +225,42 @@ def categories(request):
 
 def listing(request, id):
     listing = Listing.objects.get(id=id)
+    comments = listing.comments.order_by('-created_at')
+    favorited_listing_ids = get_favorited_listing_ids(request)
 
     if request.method == "POST":
-        form = BidForm(request.POST)
-        form.instance.bidder = request.user
-        form.instance.listing = listing
+        if confirm_bid in request.POST:
+            bid_form = BidForm(request.POST)
+            comment_form = CommentForm()
+            bid_form.instance.bidder = request.user
+            bid_form.instance.listing = listing
+            if bid_form.is_valid():
+                bid_form.save()
+                return redirect('listing', id=listing.id)
+            else:
+                bid_form.add_is_invalid_class()
 
-        if form.is_valid():
-            form.save()
-            return redirect('listing', id=listing.id)
-        else:
-            form.add_is_invalid_class()
+        elif confirm_comment in request.POST:
+            bid_form = BidForm()
+            comment_form = CommentForm(request.POST)
+            comment_form.instance.commenter = request.user
+            comment_form.instance.listing = listing
+            if comment_form.is_valid():
+                comment_form.save()
+                return redirect('listing', id=listing.id)
+            else:
+                comment_form.add_is_invalid_class()
     else:
-        form = BidForm()
+        bid_form = BidForm()
+        comment_form = CommentForm()
 
-    favorited_listing_ids = get_favorited_listing_ids(request)
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "favorited_listing_ids": favorited_listing_ids,
-        "form": form
+        "bid_form": bid_form,
+        "comment_form": comment_form,
+        "comments": comments
     })
 
 

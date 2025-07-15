@@ -134,6 +134,9 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="comments", null=True)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     comment = models.CharField(max_length=256, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"Comment: '{self.comment}' by {self.commenter} on '{self.listing.title}'"
 

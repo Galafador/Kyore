@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Listing, Bid
+from .models import Listing, Bid, Comment
 
 class ListingForm(ModelForm):
     class Meta:
@@ -47,9 +47,24 @@ class BidForm(ModelForm):
                         "class":  "form-control form-control-kyore py-4"
                     }),
         }
-
     def add_is_invalid_class(self):
         for field_name, field in self.fields.items():
             if self.errors.get(field_name):
                 existing = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing} is-invalid".strip()
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["comment"]
+        widgets = {
+                    "comment": forms.Textarea(attrs={
+                        "placeholder": "Add a comment...",
+                        "class":  "form-control comment-textarea flex-grow-1"
+                    }),
+        }
+        def add_is_invalid_class(self):
+            for field_name, field in self.fields.items():
+                if self.errors.get(field_name):
+                    existing = field.widget.attrs.get('class', '')
+                    field.widget.attrs['class'] = f"{existing} is-invalid".strip()

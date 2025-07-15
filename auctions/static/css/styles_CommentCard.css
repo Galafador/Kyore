@@ -1,0 +1,68 @@
+        .comment-card {
+            background-color: #ffffff; /* White background for the card */
+            max-width: 600px; /* Max width for the form */
+            width: 100%; /* Make it responsive */
+            padding: 25px; /* Inner padding for the card */
+        }
+        .comment-input-group {
+            /* This div now acts as the visual "textarea" with its own border and shadow */
+            border-radius: 2rem; /* Rounded corners for the entire input group */
+            border: 1px solid #ced4da; /* Light grey border */
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+            background-color: #ffffff; /* White background for the group */
+            padding: 15px; /* Padding inside the group */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .comment-input-group:focus-within {
+            border-color: var(--color-outline-brand); /* Blue border on focus */
+            box-shadow: 0 0 0 0.25rem var(--color-shadow-brand); /* Bootstrap-like focus glow */
+        }
+        .profile-pic-container {
+            width: 42px; /* Slightly smaller profile picture container */
+            height: 42px;
+            border-radius: 50%; /* Make the border circular */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Ensures the image stays within the circular boundary */
+            flex-shrink: 0; /* Prevent shrinking when content is wide */
+        }
+        .profile-pic {
+            width: 42px; /* Actual image size, slightly smaller than container */
+            height: 42px;
+            border-radius: 50%; /* Make the image itself circular */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+        }
+        .comment-textarea {
+            border: none; /* Remove its own border */
+            box-shadow: none !important; /* Remove its own shadow */
+            padding: 8px 10px; /* Adjust padding for better fit within the group */
+            resize: vertical; /* Allow vertical resizing only */
+            min-height: 60px; /* Minimum height for the textarea */
+            background-color: transparent; /* Important for the group's background to show */
+        }
+        .comment-textarea:focus {
+            outline: none; /* Remove default outline */
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .comment-card {
+                padding: 15px;
+            }
+            .profile-pic-container {
+                width: 40px;
+                height: 40px;
+            }
+            .profile-pic {
+                width: 34px;
+                height: 34px;
+            }
+            .comment-textarea {
+                min-height: 50px;
+            }
+            .submit-button {
+                padding: 7px 20px;
+                font-size: 0.85rem;
+            }
+        }
