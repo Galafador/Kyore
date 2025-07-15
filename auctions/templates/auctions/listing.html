@@ -153,9 +153,9 @@
                 </div>
             </div>
 
-            <hr>
+            
 
-            <div class="comment-card mx-auto mt-5 mb-4">
+            <div class="comment-card mx-auto mx-lg-0 mt-5 mb-4">
                 <form class="comment-input-group" action="{% url 'listing' id=listing.id %}" method="post">
                     <div class="d-flex align-items-start mb-2">
                         {% csrf_token %}
@@ -177,7 +177,7 @@
                 </form>
             </div>
             {% if comments %}
-            <div class="d-flex flex-column align-items-center mb-5" style="background-color: rgba(255, 0, 0, 0);">
+            <div class="d-flex flex-column mx-auto mx-lg-0 mb-5" style="max-width: 600px; background-color: rgba(255, 0, 0, 0);">
                 {% for comment in comments %}
                 <div class="d-flex w-100 mb-3 px-3" style="max-width: 600px; background-color: rgba(0, 128, 0, 0);">
                     <div class="profile-pic-container me-3" style="margin-top: 0.25rem;">
